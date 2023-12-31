@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Piba.Data;
+using Piba.Repositories;
+using Piba.Repositories.Interfaces;
+using Piba.Services;
+using Piba.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +19,11 @@ builder.Services.AddDbContext<PibaDbContext>(options =>
     var connectionString = builder.Configuration.GetConnectionString("Piba");
     options.UseSqlServer(connectionString);
 });
+
+builder.Services.AddScoped<MemberService, MemberServiceImp>();
+builder.Services.AddScoped<SchoolAttendanceService, SchoolAttendanceServiceImp>();
+builder.Services.AddScoped<MemberRepository, MemberRepositoryImp>();
+builder.Services.AddScoped<SchoolAttendanceRepository, SchoolAttendanceRepositoryImp>();
 
 var app = builder.Build();
 
