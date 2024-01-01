@@ -30,25 +30,25 @@ jobs:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
 
-deploy:
-  runs-on: windows-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+  deploy:
+    runs-on: windows-latest
+      needs: build
+      environment:
+        name: 'Production'
+        url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
 
-  steps:
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v3
-      with:
-        name: .net-app
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: .net-app
 
-    - name: Deploy
-      id: deploy
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'piba'
-        slot-name: 'Production'
-        publish-profile: ${{ secrets.PUBLISH_PROFILE }}
-        package: .
+      - name: Deploy
+        id: deploy
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'piba'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.PUBLISH_PROFILE }}
+          package: .
