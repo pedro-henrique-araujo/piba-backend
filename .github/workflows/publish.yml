@@ -1,6 +1,6 @@
 name: Deploy App
 
-on: 
+on:
   push:
     branches:
       - main
@@ -15,7 +15,7 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '7.x'
+          dotnet-version: "7.x"
           include-prerelease: true
 
       - name: Build with dotnet
@@ -32,11 +32,10 @@ jobs:
 
   deploy:
     runs-on: windows-latest
-      needs: build
-      environment:
-        name: 'Production'
-        url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
+    needs: build
+    environment:
+      name: "Production"
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
       - name: Download artifact from build job
@@ -48,7 +47,7 @@ jobs:
         id: deploy
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'piba'
-          slot-name: 'Production'
+          app-name: "piba"
+          slot-name: "Production"
           publish-profile: ${{ secrets.PUBLISH_PROFILE }}
           package: .
