@@ -5,11 +5,13 @@ VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piba.Data", "Piba.Data\Piba.Data.csproj", "{16713246-37AE-4694-8EA5-D11B955B3BD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piba", "Piba\Piba.csproj", "{8A347941-AD9C-4E15-94D6-1E2C7EF2A200}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piba", "Piba\Piba.csproj", "{8A347941-AD9C-4E15-94D6-1E2C7EF2A200}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piba.Repositories", "Piba.Repositories\Piba.Repositories.csproj", "{2B14D43F-4F9E-44FA-BE9E-8956942C7B43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piba.Repositories", "Piba.Repositories\Piba.Repositories.csproj", "{2B14D43F-4F9E-44FA-BE9E-8956942C7B43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piba.Services", "Piba.Services\Piba.Services.csproj", "{C5DCA5B7-1903-4F28-BC4A-E4271E2BC254}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piba.Services", "Piba.Services\Piba.Services.csproj", "{C5DCA5B7-1903-4F28-BC4A-E4271E2BC254}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piba.Services.Tests", "Piba.Services.Tests\Piba.Services.Tests.csproj", "{6E7E0AD9-B8D8-4EAC-A593-0FC1BB8110C4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{C5DCA5B7-1903-4F28-BC4A-E4271E2BC254}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5DCA5B7-1903-4F28-BC4A-E4271E2BC254}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5DCA5B7-1903-4F28-BC4A-E4271E2BC254}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E7E0AD9-B8D8-4EAC-A593-0FC1BB8110C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E7E0AD9-B8D8-4EAC-A593-0FC1BB8110C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E7E0AD9-B8D8-4EAC-A593-0FC1BB8110C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E7E0AD9-B8D8-4EAC-A593-0FC1BB8110C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

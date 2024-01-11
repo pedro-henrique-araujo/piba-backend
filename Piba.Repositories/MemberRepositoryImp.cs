@@ -1,4 +1,6 @@
-﻿using Piba.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Piba.Data;
+using Piba.Data.Dto;
 using Piba.Data.Entities;
 using Piba.Data.Enums;
 using Piba.Repositories.Interfaces;
@@ -13,11 +15,13 @@ namespace Piba.Repositories
         {
             _dbContext = dbContext;
         }
-
-        public IQueryable<Member> GetAllInactiveAndActiveQueryable()
+        
+        public async Task<List<MemberOptionDto>> GetAllInactiveAndActiveAsync()
         {
-            return _dbContext.Set<Member>()
-                .Where(m => new[] { MemberStatus.Inactive, MemberStatus.Active }.Contains(m.Status));
+            return await _dbContext.Set<Member>()
+                .Where(m => new[] { MemberStatus.Inactive, MemberStatus.Active }.Contains(m.Status))
+                .Select(m => new MemberOptionDto { Id = m.Id, Name = m.Name })
+                .ToListAsync();
         }
     }
 }

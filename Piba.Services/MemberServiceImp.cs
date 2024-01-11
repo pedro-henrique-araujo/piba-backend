@@ -16,9 +16,7 @@ namespace Piba.Services
 
         public async Task<List<MemberOptionDto>> GetOptionsAsync()
         {
-            var options = await _memberRepository.GetAllInactiveAndActiveQueryable()
-                .Select(m => new MemberOptionDto { Id = m.Id, Name = m.Name })
-                .ToListAsync();
+            var options = await _memberRepository.GetAllInactiveAndActiveAsync();
 
             return options;
         }
