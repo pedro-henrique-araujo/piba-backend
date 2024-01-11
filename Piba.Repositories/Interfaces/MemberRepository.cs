@@ -1,9 +1,9 @@
-﻿using Piba.Data.Entities;
+﻿using Piba.Data.Dto;
 
 namespace Piba.Repositories.Interfaces
 {
     public interface MemberRepository
     {
-        IQueryable<Member> GetAllInactiveAndActiveQueryable();
+        Task<List<MemberOptionDto>> GetAllInactiveAndActiveAsync();
     }
 }
