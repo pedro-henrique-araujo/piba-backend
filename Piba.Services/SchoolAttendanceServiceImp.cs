@@ -15,8 +15,7 @@ namespace Piba.Services
 
         public async Task CreateAsync(SchoolAttendance schoolAttendance)
         {
-            schoolAttendance.Id = Guid.NewGuid();
-            schoolAttendance.CreatedDate = DateTime.Now;
+            schoolAttendance.Create();
             await _schoolAttendanceRepository.CreateAsync(schoolAttendance);
         }
     }
