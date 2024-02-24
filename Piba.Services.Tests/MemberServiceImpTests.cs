@@ -1,18 +1,21 @@
 using Moq;
 using Piba.Data.Dto;
 using Piba.Repositories.Interfaces;
+using Piba.Services.Interfaces;
 
 namespace Piba.Services.Tests
 {
     public class MemberServiceImpTests
     {
         private readonly Mock<MemberRepository> _repositoryMock;
+        private readonly Mock<SchoolAttendanceService> _schoolAttendanceServiceMock;
         private readonly MemberServiceImp _memberService;
 
         public MemberServiceImpTests()
         {
             _repositoryMock = new Mock<MemberRepository>();
-            _memberService = new MemberServiceImp(_repositoryMock.Object);
+            _schoolAttendanceServiceMock = new Mock<SchoolAttendanceService>();
+            _memberService = new MemberServiceImp(_repositoryMock.Object, _schoolAttendanceServiceMock.Object);
                 
         }
 
@@ -21,7 +24,7 @@ namespace Piba.Services.Tests
         {
             var mockedMembers = GetMockedMembers();
 
-            _repositoryMock.Setup(r => r.GetAllInactiveAndActiveAsync())
+            _repositoryMock.Setup(r => r.GetAllInactiveAndActiveOptionsAsync())
                 .ReturnsAsync(mockedMembers);
 
             var memberOptions = await _memberService.GetOptionsAsync();
