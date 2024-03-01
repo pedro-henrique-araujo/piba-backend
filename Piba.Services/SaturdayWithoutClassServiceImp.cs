@@ -10,9 +10,22 @@ namespace Piba.Services
         {
             _saturdayWithoutClassRepository = saturdayWithoutClassRepository;
         }
-        public async Task<bool> AnyWithDateAsync(DateTime date)
+
+        public async Task<List<DateTime>> GetLastThreeClassesDatesAsync()
         {
-            return await _saturdayWithoutClassRepository.AnyWithDateAsync(date);
+            var output = new List<DateTime>();
+            var today = DateTime.Today;
+            var selectedSaturday = today.AddDays(1 - (double)today.DayOfWeek);
+            do
+            {
+                if (await _saturdayWithoutClassRepository.AnyWithDateAsync(selectedSaturday))
+                {
+                    output.Add(selectedSaturday);
+                }
+                selectedSaturday = selectedSaturday.AddDays(-7);
+
+            } while (output.Count() < 3);
+            return output;
         }
     }
 }

@@ -21,13 +21,13 @@ namespace Piba.Services
             await _schoolAttendanceRepository.CreateAsync(schoolAttendance);
         }
 
-        public async Task<bool> MemberIsPresentAtLeastOnceOnLastThreeSaturdaysAsync(Guid memberId)
+        public async Task<bool> MemberIsPresentAtLeastOnceOnLastThreeClassesAsync(Guid memberId)
         {
             var count = await _schoolAttendanceRepository.GetByDatesAsync(
                 new()
                 {
                     MemberId = memberId,
-                    Dates = await GetLastThreeClassesDatesAsync()
+                    Dates = await _saturdayWithoutClassService.GetLastThreeClassesDatesAsync()
                 });
             return count > 0;
         }
@@ -38,26 +38,9 @@ namespace Piba.Services
                 new()
                 {
                     MemberId = memberId,
-                    Dates = await GetLastThreeClassesDatesAsync()
+                    Dates = await _saturdayWithoutClassService.GetLastThreeClassesDatesAsync()
                 });
             return count < 3;
-        }
-
-        private async Task<List<DateTime>> GetLastThreeClassesDatesAsync()
-        {
-            var output = new List<DateTime>();
-            var today = DateTime.Today;
-            var selectedSaturday = today.AddDays(1 - (double)today.DayOfWeek);
-            do
-            {
-                if (await _saturdayWithoutClassService.AnyWithDateAsync(selectedSaturday))
-                {
-                    output.Add(selectedSaturday);
-                }
-                selectedSaturday = selectedSaturday.AddDays(-7);
-
-            } while (output.Count() < 3);
-            return output;
         }
     }
 }

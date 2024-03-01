@@ -2,6 +2,6 @@
 {
     public interface SaturdayWithoutClassService
     {
-        Task<bool> AnyWithDateAsync(DateTime date);
+        Task<List<DateTime>> GetLastThreeClassesDatesAsync();
     }
 }
