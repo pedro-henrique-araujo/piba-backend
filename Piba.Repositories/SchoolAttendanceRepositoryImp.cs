@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Piba.Data;
+using Piba.Data.Dto;
 using Piba.Data.Entities;
 using Piba.Repositories.Interfaces;
 
@@ -18,6 +19,15 @@ namespace Piba.Repositories
         {
             _dbContext.Entry(schoolAttendance).State = EntityState.Added;
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<int> GetByDatesAsync(MemberClassesByDatesFilter filter)
+        {
+            return await _dbContext.Set<SchoolAttendance>()
+                .Where(a => a.MemberId == filter.MemberId && filter.Dates.Contains(a.CreatedDate.Value.Date))
+                .Select(a=> a.CreatedDate)
+                .Distinct()
+                .CountAsync();
         }
     }
 }

@@ -15,13 +15,33 @@ namespace Piba.Repositories
         {
             _dbContext = dbContext;
         }
-        
-        public async Task<List<MemberOptionDto>> GetAllInactiveAndActiveAsync()
+
+
+        public async Task<List<MemberOptionDto>> GetAllInactiveAndActiveOptionsAsync()
         {
             return await _dbContext.Set<Member>()
                 .Where(m => new[] { MemberStatus.Inactive, MemberStatus.Active }.Contains(m.Status))
                 .Select(m => new MemberOptionDto { Id = m.Id, Name = m.Name })
                 .ToListAsync();
+        }
+
+        public async Task<List<Member>> GetAllActiveAsync()
+        {
+            return await _dbContext.Set<Member>()
+                .Where(m => m.Status == MemberStatus.Active)
+                .ToListAsync();
+        }
+
+        public async Task<List<Member>> GetAllInactiveAsync()
+        {
+            return await _dbContext.Set<Member>()
+               .Where(m => m.Status == MemberStatus.Inactive)
+               .ToListAsync();
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

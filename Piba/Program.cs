@@ -22,8 +22,11 @@ builder.Services.AddDbContext<PibaDbContext>(options =>
 
 builder.Services.AddScoped<MemberService, MemberServiceImp>();
 builder.Services.AddScoped<SchoolAttendanceService, SchoolAttendanceServiceImp>();
+builder.Services.AddScoped<SaturdayWithoutClassService, SaturdayWithoutClassServiceImp>();
+
 builder.Services.AddScoped<MemberRepository, MemberRepositoryImp>();
 builder.Services.AddScoped<SchoolAttendanceRepository, SchoolAttendanceRepositoryImp>();
+builder.Services.AddScoped<SaturdayWithoutClassRepository, SaturdayWithoutClassRepositoryImp>();
 
 var app = builder.Build();
 
