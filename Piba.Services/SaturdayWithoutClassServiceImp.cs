@@ -15,10 +15,10 @@ namespace Piba.Services
         {
             var output = new List<DateTime>();
             var today = DateTime.Today;
-            var selectedSaturday = today.AddDays(1 - (double)today.DayOfWeek);
+            var selectedSaturday = today.AddDays(-1 - (double)today.DayOfWeek);
             do
             {
-                if (await _saturdayWithoutClassRepository.AnyWithDateAsync(selectedSaturday))
+                if (await _saturdayWithoutClassRepository.DateHasClassAsync(selectedSaturday))
                 {
                     output.Add(selectedSaturday);
                 }

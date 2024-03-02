@@ -1,8 +1,7 @@
-﻿using Piba.Repositories.Interfaces;
-using Piba.Data.Dto;
-using Microsoft.EntityFrameworkCore;
-using Piba.Services.Interfaces;
+﻿using Piba.Data.Dto;
 using Piba.Data.Enums;
+using Piba.Repositories.Interfaces;
+using Piba.Services.Interfaces;
 
 namespace Piba.Services
 {
@@ -45,10 +44,10 @@ namespace Piba.Services
         private async Task CheckStatusChangeFromInactiveToActiveAsync()
         {
             var members = await _memberRepository.GetAllInactiveAsync();
-            foreach(var member in members)
+            foreach (var member in members)
             {
                 if (await _schoolAttendanceService.MemberMissedAnyOfLastThreeClassesAsync(member.Id)) continue;
-                
+
                 member.Status = MemberStatus.Active;
             }
         }

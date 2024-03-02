@@ -11,12 +11,12 @@ namespace Piba.Repositories
 
         public SaturdayWithoutClassRepositoryImp(PibaDbContext dbContext)
         {
-            _dbContext = dbContext;            
+            _dbContext = dbContext;
         }
 
-        public async Task<bool> AnyWithDateAsync(DateTime date)
+        public async Task<bool> DateHasClassAsync(DateTime date)
         {
-            return await _dbContext.Set<SaturdayWithoutClass>().AnyAsync(s => s.DateTime.Date == date.Date);
+            return await _dbContext.Set<SaturdayWithoutClass>().AnyAsync(s => s.DateTime.Date == date.Date) == false;
         }
     }
 }

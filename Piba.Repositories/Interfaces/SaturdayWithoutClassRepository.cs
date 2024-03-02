@@ -2,6 +2,6 @@
 {
     public interface SaturdayWithoutClassRepository
     {
-        Task<bool> AnyWithDateAsync(DateTime date);
+        Task<bool> DateHasClassAsync(DateTime date);
     }
 }

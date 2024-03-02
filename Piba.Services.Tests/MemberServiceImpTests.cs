@@ -18,7 +18,7 @@ namespace Piba.Services.Tests
             _repositoryMock = new Mock<MemberRepository>();
             _schoolAttendanceServiceMock = new Mock<SchoolAttendanceService>();
             _memberService = new MemberServiceImp(_repositoryMock.Object, _schoolAttendanceServiceMock.Object);
-                
+
         }
 
         [Fact]

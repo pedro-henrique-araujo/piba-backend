@@ -5,5 +5,6 @@ namespace Piba.Services.Interfaces
     public interface MemberService
     {
         Task<List<MemberOptionDto>> GetOptionsAsync();
+        Task ReviewMembersActivityAsync();
     }
 }

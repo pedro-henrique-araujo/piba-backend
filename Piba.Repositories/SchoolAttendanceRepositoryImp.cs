@@ -24,7 +24,9 @@ namespace Piba.Repositories
         public async Task<int> GetByDatesAsync(MemberClassesByDatesFilter filter)
         {
             return await _dbContext.Set<SchoolAttendance>()
-                .Where(a => a.MemberId == filter.MemberId && filter.Dates.Contains(a.CreatedDate.GetValueOrDefault().Date))
+                .Where(a => a.MemberId == filter.MemberId && filter.Dates.Contains(a.CreatedDate.Value.Date))
+                .Select(a=> a.CreatedDate)
+                .Distinct()
                 .CountAsync();
         }
     }

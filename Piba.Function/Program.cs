@@ -1,0 +1,32 @@
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Piba.Data;
+using Piba.Repositories;
+using Piba.Repositories.Interfaces;
+using Piba.Services;
+using Piba.Services.Interfaces;
+
+var host = new HostBuilder()
+    .ConfigureFunctionsWebApplication()
+    .ConfigureServices(services =>
+    {
+        services.AddScoped<MemberService, MemberServiceImp>();
+        services.AddScoped<SchoolAttendanceService, SchoolAttendanceServiceImp>();
+        services.AddScoped<SaturdayWithoutClassService, SaturdayWithoutClassServiceImp>();
+
+        services.AddScoped<MemberRepository, MemberRepositoryImp>();
+        services.AddScoped<SchoolAttendanceRepository, SchoolAttendanceRepositoryImp>();
+        services.AddScoped<SaturdayWithoutClassRepository, SaturdayWithoutClassRepositoryImp>();
+
+        services.AddDbContext<PibaDbContext>(options =>
+        {
+            options.UseSqlServer(Environment.GetEnvironmentVariable("DatabaseConnectionString"));
+        });
+        services.AddApplicationInsightsTelemetryWorkerService();
+        services.ConfigureFunctionsApplicationInsights();
+    })
+    .Build();
+
+host.Run();
