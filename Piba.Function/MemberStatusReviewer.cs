@@ -38,7 +38,7 @@ namespace Piba.Function
 
         private async Task FinalLogAsync()
         {
-            await _logService.LogMessageAsync($"{nameof(ReviewMembersActivityAsync)} Timer trigger function executed at: {DateTime.Now}");
+            await _logService.LogMessageAsync($"{nameof(ReviewMembersActivityAsync)} executed at: {DateTime.Now}");
         }
     }
 }
