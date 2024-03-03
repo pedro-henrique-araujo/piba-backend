@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Piba.Services.Interfaces;
@@ -15,22 +16,29 @@ namespace Piba.Function
             _memberService = memberService;
         }
 
-        [Function(nameof(ReviewMembersActivityAsync))]
-        public async Task ReviewMembersActivityAsync(
-            [TimerTrigger("0 0 * * 0,4", RunOnStartup = true)] TimerInfo myTimer)
+        [Function(nameof(ReviewMembersActivityTimerTriggerAsync))]
+        public async Task ReviewMembersActivityTimerTriggerAsync(
+            [TimerTrigger("0 0 * * *", RunOnStartup = true)] TimerInfo myTimer)
         {
-            await _memberService.ReviewMembersActivityAsync();
-            await FinalLogAsync(myTimer);
+            await ReviewMembersActivityAsync();
         }
 
-        private async Task FinalLogAsync(TimerInfo myTimer)
+        [Function(nameof(ReviewMembersActivityHttpTriggerAsync))]
+        public async Task ReviewMembersActivityHttpTriggerAsync(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req)
+        {
+            await ReviewMembersActivityAsync();
+        }
+
+        public async Task ReviewMembersActivityAsync()
+        {
+            await _memberService.ReviewMembersActivityAsync();
+            await FinalLogAsync();
+        }
+
+        private async Task FinalLogAsync()
         {
             await _logService.LogMessageAsync($"{nameof(ReviewMembersActivityAsync)} Timer trigger function executed at: {DateTime.Now}");
-            
-            if (myTimer.ScheduleStatus is not null)
-            {
-                await _logService.LogMessageAsync($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
-            }
         }
     }
 }
