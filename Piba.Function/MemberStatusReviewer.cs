@@ -6,12 +6,12 @@ namespace Piba.Function
 {
     public class MemberStatusReviewer
     {
-        private readonly ILogger _logger;
+        private readonly LogService _logService;
         private readonly MemberService _memberService;
 
-        public MemberStatusReviewer(ILoggerFactory loggerFactory, MemberService memberService)
+        public MemberStatusReviewer(LogService logService, MemberService memberService)
         {
-            _logger = loggerFactory.CreateLogger<MemberStatusReviewer>();
+            _logService = logService;
             _memberService = memberService;
         }
 
@@ -20,16 +20,16 @@ namespace Piba.Function
             [TimerTrigger("0 0 * * 0,4", RunOnStartup = true)] TimerInfo myTimer)
         {
             await _memberService.ReviewMembersActivityAsync();
-            FinalLog(myTimer);
+            await FinalLogAsync(myTimer);
         }
 
-        private void FinalLog(TimerInfo myTimer)
+        private async Task FinalLogAsync(TimerInfo myTimer)
         {
-            _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
-
+            await _logService.LogMessageAsync($"{nameof(ReviewMembersActivityAsync)} Timer trigger function executed at: {DateTime.Now}");
+            
             if (myTimer.ScheduleStatus is not null)
             {
-                _logger.LogInformation($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
+                await _logService.LogMessageAsync($"Next timer schedule at: {myTimer.ScheduleStatus.Next}");
             }
         }
     }

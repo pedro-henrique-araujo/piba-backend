@@ -15,10 +15,12 @@ var host = new HostBuilder()
         services.AddScoped<MemberService, MemberServiceImp>();
         services.AddScoped<SchoolAttendanceService, SchoolAttendanceServiceImp>();
         services.AddScoped<SaturdayWithoutClassService, SaturdayWithoutClassServiceImp>();
+        services.AddScoped<LogService, LogServiceImp>();
 
         services.AddScoped<MemberRepository, MemberRepositoryImp>();
         services.AddScoped<SchoolAttendanceRepository, SchoolAttendanceRepositoryImp>();
         services.AddScoped<SaturdayWithoutClassRepository, SaturdayWithoutClassRepositoryImp>();
+        services.AddScoped<LogRepository, LogRepositoryImp>();
 
         services.AddDbContext<PibaDbContext>(options =>
         {
