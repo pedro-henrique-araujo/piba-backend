@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 using Piba.Services.Interfaces;
 
 namespace Piba.Function
@@ -9,11 +8,13 @@ namespace Piba.Function
     {
         private readonly LogService _logService;
         private readonly MemberService _memberService;
+        private readonly EmailService _emailService;
 
-        public MemberStatusReviewer(LogService logService, MemberService memberService)
+        public MemberStatusReviewer(LogService logService, MemberService memberService, EmailService emailService)
         {
             _logService = logService;
             _memberService = memberService;
+            _emailService = emailService;
         }
 
         [Function(nameof(ReviewMembersActivityTimerTriggerAsync))]
@@ -33,12 +34,18 @@ namespace Piba.Function
         public async Task ReviewMembersActivityAsync()
         {
             await _memberService.ReviewMembersActivityAsync();
-            await FinalLogAsync();
+            await FinalNotificationsAsync();
         }
 
-        private async Task FinalLogAsync()
+        private async Task FinalNotificationsAsync()
         {
             await _logService.LogMessageAsync($"{nameof(ReviewMembersActivityAsync)} executed at: {DateTime.Now}");
+            _emailService.SendEmailToDeveloper(new()
+            {
+                Subject = "Members Activity Review",
+                Body = "PIBA Members Activity is Reviewed"
+            });
+
         }
     }
 }

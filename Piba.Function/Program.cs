@@ -16,6 +16,7 @@ var host = new HostBuilder()
         services.AddScoped<SchoolAttendanceService, SchoolAttendanceServiceImp>();
         services.AddScoped<SaturdayWithoutClassService, SaturdayWithoutClassServiceImp>();
         services.AddScoped<LogService, LogServiceImp>();
+        services.AddScoped<EmailService, EmailServiceImp>();
 
         services.AddScoped<MemberRepository, MemberRepositoryImp>();
         services.AddScoped<SchoolAttendanceRepository, SchoolAttendanceRepositoryImp>();
