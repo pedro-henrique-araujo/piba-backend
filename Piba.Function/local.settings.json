@@ -3,6 +3,11 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "DatabaseConnectionString": "Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=Piba;Trusted_Connection=True"
+    "DatabaseConnectionString": "Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=Piba;Trusted_Connection=True",
+    "SmtpHost": "",
+    "DeveloperEmail": "",
+    "FromEmail": "",
+    "FromEmailUserName": "",
+    "FromEmailPassword": ""
   }
 }
