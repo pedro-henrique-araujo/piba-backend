@@ -19,7 +19,7 @@ namespace Piba.Function
 
         [Function(nameof(ReviewMembersActivityTimerTriggerAsync))]
         public async Task ReviewMembersActivityTimerTriggerAsync(
-            [TimerTrigger("0 * * * * *", RunOnStartup = true)] TimerInfo myTimer)
+            [TimerTrigger("0 0 0 * * *", RunOnStartup = true)] TimerInfo myTimer)
         {
             await ReviewMembersActivityAsync();
         }
