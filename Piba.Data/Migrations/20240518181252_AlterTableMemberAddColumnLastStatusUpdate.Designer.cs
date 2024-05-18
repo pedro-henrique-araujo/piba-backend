@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Piba.Data;
 
@@ -11,9 +12,11 @@ using Piba.Data;
 namespace Piba.Data.Migrations
 {
     [DbContext(typeof(PibaDbContext))]
-    partial class PibaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240518181252_AlterTableMemberAddColumnLastStatusUpdate")]
+    partial class AlterTableMemberAddColumnLastStatusUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,26 +65,6 @@ namespace Piba.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Members");
-                });
-
-            modelBuilder.Entity("Piba.Data.Entities.MemberStatusHistory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("HistoryMonth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("MemberId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MemberStatusHistories");
                 });
 
             modelBuilder.Entity("Piba.Data.Entities.SaturdayWithoutClass", b =>

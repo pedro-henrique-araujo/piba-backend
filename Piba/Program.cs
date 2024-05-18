@@ -28,6 +28,9 @@ builder.Services.AddScoped<MemberRepository, MemberRepositoryImp>();
 builder.Services.AddScoped<SchoolAttendanceRepository, SchoolAttendanceRepositoryImp>();
 builder.Services.AddScoped<SaturdayWithoutClassRepository, SaturdayWithoutClassRepositoryImp>();
 
+builder.Services.AddScoped<SmtpClientWrapper, SmtpClientWrapperImp>();
+builder.Services.AddScoped<EnvironmentVariables, EnvironmentVariablesImp>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

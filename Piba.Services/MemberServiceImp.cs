@@ -32,12 +32,13 @@ namespace Piba.Services
 
         private async Task CheckStatusChangeFromActiveToInactiveAsync()
         {
-            var members = await _memberRepository.GetAllActiveAsync();
+            var members = await _memberRepository.GetAllActiveCreatedBefore21DaysAgoAsync();
             foreach (var member in members)
             {
                 if (await _schoolAttendanceService.MemberIsPresentAtLeastOnceOnLastThreeClassesAsync(member.Id)) continue;
 
                 member.Status = MemberStatus.Inactive;
+                member.LastStatusUpdate = DateTime.UtcNow;
             }
         }
 
@@ -49,6 +50,7 @@ namespace Piba.Services
                 if (await _schoolAttendanceService.MemberMissedAnyOfLastThreeClassesAsync(member.Id)) continue;
 
                 member.Status = MemberStatus.Active;
+                member.LastStatusUpdate = DateTime.UtcNow;
             }
         }
     }
