@@ -23,6 +23,9 @@ var host = new HostBuilder()
         services.AddScoped<SaturdayWithoutClassRepository, SaturdayWithoutClassRepositoryImp>();
         services.AddScoped<LogRepository, LogRepositoryImp>();
 
+        services.AddScoped<SmtpClientWrapper, SmtpClientWrapperImp>();
+        services.AddScoped<EnvironmentVariables, EnvironmentVariablesImp>();
+
         services.AddDbContext<PibaDbContext>(options =>
         {
             options.UseSqlServer(Environment.GetEnvironmentVariable("DatabaseConnectionString"));

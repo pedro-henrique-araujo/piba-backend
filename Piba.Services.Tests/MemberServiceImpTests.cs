@@ -12,12 +12,14 @@ namespace Piba.Services.Tests
         private readonly Mock<MemberRepository> _repositoryMock;
         private readonly Mock<SchoolAttendanceService> _schoolAttendanceServiceMock;
         private readonly MemberServiceImp _memberService;
+        private readonly DateTime _baseDate;
 
         public MemberServiceImpTests()
         {
             _repositoryMock = new Mock<MemberRepository>();
             _schoolAttendanceServiceMock = new Mock<SchoolAttendanceService>();
             _memberService = new MemberServiceImp(_repositoryMock.Object, _schoolAttendanceServiceMock.Object);
+            _baseDate = DateTime.UtcNow;
 
         }
 
@@ -51,7 +53,9 @@ namespace Piba.Services.Tests
             await _memberService.ReviewMembersActivityAsync();
             _repositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
             Assert.Single(initiallyActive.Where(a => a.Status == MemberStatus.Active));
+            Assert.Equal(2, initiallyActive.Where(a => a.LastStatusUpdate > _baseDate).Count());
             Assert.Single(initiallyInactive.Where(a => a.Status == MemberStatus.Inactive));
+            Assert.Equal(2, initiallyInactive.Where(a => a.LastStatusUpdate > _baseDate).Count());
 
         }
 
@@ -70,7 +74,7 @@ namespace Piba.Services.Tests
 
         private void SetupForActiveMembers(List<Member> initiallyActive)
         {
-            _repositoryMock.Setup(r => r.GetAllActiveAsync()).ReturnsAsync(initiallyActive);
+            _repositoryMock.Setup(r => r.GetAllActiveCreatedBefore21DaysAgoAsync()).ReturnsAsync(initiallyActive);
             _schoolAttendanceServiceMock
                 .Setup(s => s.MemberIsPresentAtLeastOnceOnLastThreeClassesAsync(It.Is<Guid>(id => id == initiallyActive.First().Id)))
                 .ReturnsAsync(false);
@@ -93,9 +97,9 @@ namespace Piba.Services.Tests
         {
             return new()
             {
-                new () { Id = Guid.NewGuid(), Status = MemberStatus.Active},
-                new () { Id = Guid.NewGuid(), Status = MemberStatus.Active},
-                new () { Id = Guid.NewGuid(), Status = MemberStatus.Active}
+                new () { Id = Guid.NewGuid(), Status = MemberStatus.Active, LastStatusUpdate = _baseDate},
+                new () { Id = Guid.NewGuid(), Status = MemberStatus.Active, LastStatusUpdate = _baseDate},
+                new () { Id = Guid.NewGuid(), Status = MemberStatus.Active, LastStatusUpdate = _baseDate}
             };
         }
 
@@ -103,9 +107,9 @@ namespace Piba.Services.Tests
         {
             return new()
             {
-                new() { Id = Guid.NewGuid(), Status = MemberStatus.Inactive},
-                new() { Id = Guid.NewGuid(), Status = MemberStatus.Inactive},
-                new() { Id = Guid.NewGuid(), Status = MemberStatus.Inactive}
+                new() { Id = Guid.NewGuid(), Status = MemberStatus.Inactive, LastStatusUpdate = _baseDate},
+                new() { Id = Guid.NewGuid(), Status = MemberStatus.Inactive, LastStatusUpdate = _baseDate},
+                new() { Id = Guid.NewGuid(), Status = MemberStatus.Inactive, LastStatusUpdate = _baseDate}
             };
         }
     }

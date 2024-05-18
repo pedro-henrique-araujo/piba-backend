@@ -5,7 +5,7 @@ namespace Piba.Repositories.Interfaces
 {
     public interface MemberRepository
     {
-        Task<List<Member>> GetAllActiveAsync();
+        Task<List<Member>> GetAllActiveCreatedBefore21DaysAgoAsync();
         Task<List<MemberOptionDto>> GetAllInactiveAndActiveOptionsAsync();
         Task<List<Member>> GetAllInactiveAsync();
         Task SaveChangesAsync();

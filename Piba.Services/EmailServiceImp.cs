@@ -1,51 +1,30 @@
 ﻿using Piba.Data.Dto;
 using Piba.Services.Interfaces;
-using System.Net;
 using System.Net.Mail;
 
 namespace Piba.Services
 {
     public class EmailServiceImp : EmailService
     {
-        private readonly string _developerEmail;
-        private readonly string _from;
-        private readonly string _fromUserName;
-        private readonly string _fromPassword;
-        private readonly string _emailHost;
+        private readonly SmtpClientWrapper _smtpClientWrapper;
+        private readonly EnvironmentVariables _environmentVariables;
 
-        public EmailServiceImp()
+        public EmailServiceImp(SmtpClientWrapper smtpPibaClient, EnvironmentVariables environmentVariables)
         {
-            _emailHost = Environment.GetEnvironmentVariable("SmtpHost");
-            _developerEmail = Environment.GetEnvironmentVariable("DeveloperEmail");
-            _from = Environment.GetEnvironmentVariable("FromEmail");
-            _fromUserName = Environment.GetEnvironmentVariable("FromEmailUserName");
-            _fromPassword = Environment.GetEnvironmentVariable("FromEmailPassword");
+            _smtpClientWrapper = smtpPibaClient;
+            _environmentVariables = environmentVariables;
         }
 
         public void SendEmailToDeveloper(SendEmailDto dto)
         {
 
-            var email = new MailMessage(_from, _developerEmail)
+            var email = new MailMessage(_environmentVariables.FromEmail, _environmentVariables.DeveloperEmail)
             {
                 Subject = dto.Subject,
                 Body = dto.Body
             };
 
-            var smtpClient = CreateSmtpClientToDeveloper();
-
-            smtpClient.Send(email);
-        }
-
-        private SmtpClient CreateSmtpClientToDeveloper()
-        {
-            return new SmtpClient
-            {
-                Host = _emailHost,
-                Port = 587,
-                Credentials = new NetworkCredential(_fromUserName, _fromPassword),
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                EnableSsl = true
-            };
+            _smtpClientWrapper.Send(email);
         }
     }
 }
