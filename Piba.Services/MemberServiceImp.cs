@@ -9,11 +9,16 @@ namespace Piba.Services
     {
         private readonly MemberRepository _memberRepository;
         private readonly SchoolAttendanceService _schoolAttendanceService;
+        private readonly MemberStatusHistoryService _memberStatusHistoryService;
 
-        public MemberServiceImp(MemberRepository memberRepository, SchoolAttendanceService schoolAttendanceService)
+        public MemberServiceImp(
+            MemberRepository memberRepository, 
+            SchoolAttendanceService schoolAttendanceService, 
+            MemberStatusHistoryService memberStatusHistoryService)
         {
             _memberRepository = memberRepository;
             _schoolAttendanceService = schoolAttendanceService;
+            _memberStatusHistoryService = memberStatusHistoryService;
         }
 
         public async Task<List<MemberOptionDto>> GetOptionsAsync()
@@ -25,6 +30,7 @@ namespace Piba.Services
 
         public async Task ReviewMembersActivityAsync()
         {
+            await _memberStatusHistoryService.CreateActivityHistoryForLastMonthIfItDoesNotExistAsync();
             await CheckStatusChangeFromActiveToInactiveAsync();
             await CheckStatusChangeFromInactiveToActiveAsync();
             await _memberRepository.SaveChangesAsync();

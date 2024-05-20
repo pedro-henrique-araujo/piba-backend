@@ -9,12 +9,18 @@ namespace Piba.Function
         private readonly LogService _logService;
         private readonly MemberService _memberService;
         private readonly EmailService _emailService;
+        private readonly MemberStatusHistoryService _memberStatusHistoryService;
 
-        public MemberStatusReviewer(LogService logService, MemberService memberService, EmailService emailService)
+        public MemberStatusReviewer(
+            LogService logService, 
+            MemberService memberService,
+            EmailService emailService,
+            MemberStatusHistoryService memberStatusHistoryService)
         {
             _logService = logService;
             _memberService = memberService;
             _emailService = emailService;
+            _memberStatusHistoryService = memberStatusHistoryService;
         }
 
         [Function(nameof(ReviewMembersActivityTimerTriggerAsync))]
@@ -29,6 +35,12 @@ namespace Piba.Function
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req)
         {
             await ReviewMembersActivityAsync();
+        }
+
+        [Function(nameof(SendMemberStatusHistoryEmailToReceiversAsync))]
+        public async Task SendMemberStatusHistoryEmailToReceiversAsync([TimerTrigger("0 0 0 0 * *", RunOnStartup = true)] TimerInfo myTimer)
+        {
+            await _memberStatusHistoryService.SendMemberStatusHistoryEmailToReceiversAsync();
         }
 
         public async Task ReviewMembersActivityAsync()

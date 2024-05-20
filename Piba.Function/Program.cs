@@ -17,11 +17,14 @@ var host = new HostBuilder()
         services.AddScoped<SaturdayWithoutClassService, SaturdayWithoutClassServiceImp>();
         services.AddScoped<LogService, LogServiceImp>();
         services.AddScoped<EmailService, EmailServiceImp>();
+        services.AddScoped<MemberStatusHistoryService, MemberStatusHistoryServiceImp>();
+
 
         services.AddScoped<MemberRepository, MemberRepositoryImp>();
         services.AddScoped<SchoolAttendanceRepository, SchoolAttendanceRepositoryImp>();
         services.AddScoped<SaturdayWithoutClassRepository, SaturdayWithoutClassRepositoryImp>();
         services.AddScoped<LogRepository, LogRepositoryImp>();
+        services.AddScoped<MemberStatusHistoryRepository, MemberStatusHistoryRepositoryImp>();
 
         services.AddScoped<SmtpClientWrapper, SmtpClientWrapperImp>();
         services.AddScoped<EnvironmentVariables, EnvironmentVariablesImp>();

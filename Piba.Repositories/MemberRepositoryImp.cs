@@ -16,7 +16,6 @@ namespace Piba.Repositories
             _dbContext = dbContext;
         }
 
-
         public async Task<List<MemberOptionDto>> GetAllInactiveAndActiveOptionsAsync()
         {
             return await _dbContext.Set<Member>()
@@ -43,6 +42,13 @@ namespace Piba.Repositories
         public async Task SaveChangesAsync()
         {
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Member>> GetAllInactiveAndActiveAsync()
+        {
+            return await _dbContext.Set<Member>()
+                 .Where(m => new[] { MemberStatus.Inactive, MemberStatus.Active }.Contains(m.Status))
+                 .ToListAsync();
         }
     }
 }

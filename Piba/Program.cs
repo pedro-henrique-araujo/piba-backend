@@ -23,10 +23,12 @@ builder.Services.AddDbContext<PibaDbContext>(options =>
 builder.Services.AddScoped<MemberService, MemberServiceImp>();
 builder.Services.AddScoped<SchoolAttendanceService, SchoolAttendanceServiceImp>();
 builder.Services.AddScoped<SaturdayWithoutClassService, SaturdayWithoutClassServiceImp>();
+builder.Services.AddScoped<MemberStatusHistoryService, MemberStatusHistoryServiceImp>();
 
 builder.Services.AddScoped<MemberRepository, MemberRepositoryImp>();
 builder.Services.AddScoped<SchoolAttendanceRepository, SchoolAttendanceRepositoryImp>();
 builder.Services.AddScoped<SaturdayWithoutClassRepository, SaturdayWithoutClassRepositoryImp>();
+builder.Services.AddScoped<MemberStatusHistoryRepository, MemberStatusHistoryRepositoryImp>();
 
 builder.Services.AddScoped<SmtpClientWrapper, SmtpClientWrapperImp>();
 builder.Services.AddScoped<EnvironmentVariables, EnvironmentVariablesImp>();
