@@ -2,21 +2,21 @@
 
 namespace Piba.Data.Entities
 {
-    public class MemberStatusHistory
+    public class StatusHistoryItem
     {
         public Guid Id { get; set; }
+        public Guid StatusHistoryId { get; set; }
+        public StatusHistory StatusHistory { get; set; }
         public Guid MemberId { get; set; }
+        public Member Member { get; set; }
         public MemberStatus Status { get; set; }
-        public DateTime HistoryMonth { get; set; }
-        public MemberStatusHistory()
+        public StatusHistoryItem()
         {
 
         }
 
-        public MemberStatusHistory(Member member)
+        public StatusHistoryItem(Member member)
         {
-            var today = DateTime.Today;
-            HistoryMonth = today.AddDays(1 - today.Day).AddMonths(-1);
             Status = member.Status;
             MemberId = member.Id;
         }

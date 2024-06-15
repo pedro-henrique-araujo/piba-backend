@@ -21,8 +21,23 @@ namespace Piba.Services
             var email = new MailMessage(_environmentVariables.FromEmail, _environmentVariables.DeveloperEmail)
             {
                 Subject = dto.Subject,
+                Body = dto.Body,
+            };
+
+            _smtpClientWrapper.Send(email);
+        }
+
+        public void SendEmailToDeveloper(SendEmailDto dto, byte[] attachment)
+        {
+            var email = new MailMessage(_environmentVariables.FromEmail, _environmentVariables.DeveloperEmail)
+            {
+                Subject = dto.Subject,
                 Body = dto.Body
             };
+
+            using var memoryStream = new MemoryStream(attachment);
+
+            email.Attachments.Add(new (memoryStream, "file.xlsx"));
 
             _smtpClientWrapper.Send(email);
         }

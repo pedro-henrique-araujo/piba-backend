@@ -2,9 +2,9 @@
 
 namespace Piba.Repositories.Interfaces
 {
-    public interface MemberStatusHistoryRepository
+    public interface StatusHistoryRepository
     {
-        Task CreateAsync(IEnumerable<MemberStatusHistory> histories);
+        Task CreateAsync(StatusHistory statusHistory);
         Task<bool> HistoryForLastMonthExistsAsync();
     }
 }

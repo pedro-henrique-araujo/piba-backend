@@ -12,8 +12,8 @@ using Piba.Data;
 namespace Piba.Data.Migrations
 {
     [DbContext(typeof(PibaDbContext))]
-    [Migration("20240518183321_CreateTableMemberStatusHistories")]
-    partial class CreateTableMemberStatusHistories
+    [Migration("20240615020716_CreateTableStatusHistoryAndItem")]
+    partial class CreateTableStatusHistoryAndItem
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,26 +67,6 @@ namespace Piba.Data.Migrations
                     b.ToTable("Members");
                 });
 
-            modelBuilder.Entity("Piba.Data.Entities.MemberStatusHistory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("HistoryMonth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("MemberId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MemberStatusHistories");
-                });
-
             modelBuilder.Entity("Piba.Data.Entities.SaturdayWithoutClass", b =>
                 {
                     b.Property<Guid>("Id")
@@ -132,6 +112,69 @@ namespace Piba.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SchoolAttendances");
+                });
+
+            modelBuilder.Entity("Piba.Data.Entities.StatusHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsSent")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StatusHistories");
+                });
+
+            modelBuilder.Entity("Piba.Data.Entities.StatusHistoryItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("StatusHistoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MemberId");
+
+                    b.HasIndex("StatusHistoryId");
+
+                    b.ToTable("StatusHistoryItems");
+                });
+
+            modelBuilder.Entity("Piba.Data.Entities.StatusHistoryItem", b =>
+                {
+                    b.HasOne("Piba.Data.Entities.Member", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Piba.Data.Entities.StatusHistory", "StatusHistory")
+                        .WithMany()
+                        .HasForeignKey("StatusHistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("StatusHistory");
                 });
 #pragma warning restore 612, 618
         }

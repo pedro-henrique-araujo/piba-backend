@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using Piba.Data;
 using Piba.Repositories;
 using Piba.Repositories.Interfaces;
@@ -6,6 +7,8 @@ using Piba.Services;
 using Piba.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
+
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 // Add services to the container.
 
@@ -23,12 +26,13 @@ builder.Services.AddDbContext<PibaDbContext>(options =>
 builder.Services.AddScoped<MemberService, MemberServiceImp>();
 builder.Services.AddScoped<SchoolAttendanceService, SchoolAttendanceServiceImp>();
 builder.Services.AddScoped<SaturdayWithoutClassService, SaturdayWithoutClassServiceImp>();
-builder.Services.AddScoped<MemberStatusHistoryService, MemberStatusHistoryServiceImp>();
+builder.Services.AddScoped<StatusHistoryService, StatusHistoryServiceImp>();
 
 builder.Services.AddScoped<MemberRepository, MemberRepositoryImp>();
 builder.Services.AddScoped<SchoolAttendanceRepository, SchoolAttendanceRepositoryImp>();
 builder.Services.AddScoped<SaturdayWithoutClassRepository, SaturdayWithoutClassRepositoryImp>();
-builder.Services.AddScoped<MemberStatusHistoryRepository, MemberStatusHistoryRepositoryImp>();
+builder.Services.AddScoped<StatusHistoryRepository, StatusHistoryRepositoryImp>();
+builder.Services.AddScoped<StatusHistoryItemRepository, StatusHistoryItemRepositoryImp>();
 
 builder.Services.AddScoped<SmtpClientWrapper, SmtpClientWrapperImp>();
 builder.Services.AddScoped<EnvironmentVariables, EnvironmentVariablesImp>();

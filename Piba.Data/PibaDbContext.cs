@@ -10,7 +10,8 @@ namespace Piba.Data
         public DbSet<Member> Members { get; set; }
         public DbSet<SchoolAttendance> SchoolAttendances { get; set; }
         public DbSet<SaturdayWithoutClass> SaturdayWithoutClasses { get; set; }
-        public DbSet<MemberStatusHistory> MemberStatusHistories { get; set; }
+        public DbSet<StatusHistory> StatusHistories { get; set; }
+        public DbSet<StatusHistoryItem> StatusHistoryItems { get; set; }
         public DbSet<Log> Logs { get; set; }
     }
 }

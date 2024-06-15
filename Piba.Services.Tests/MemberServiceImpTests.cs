@@ -11,7 +11,7 @@ namespace Piba.Services.Tests
     {
         private readonly Mock<MemberRepository> _repositoryMock;
         private readonly Mock<SchoolAttendanceService> _schoolAttendanceServiceMock;
-        private readonly Mock<MemberStatusHistoryService> _memberStatusHistoryServiceMock;
+        private readonly Mock<StatusHistoryService> _memberStatusHistoryServiceMock;
         private readonly MemberServiceImp _memberService;
         private readonly DateTime _baseDate;
 
@@ -19,14 +19,14 @@ namespace Piba.Services.Tests
         {
             _repositoryMock = new Mock<MemberRepository>();
             _schoolAttendanceServiceMock = new Mock<SchoolAttendanceService>();
-            _memberStatusHistoryServiceMock = new Mock<MemberStatusHistoryService>();
+            _memberStatusHistoryServiceMock = new Mock<StatusHistoryService>();
             _memberService = new MemberServiceImp(_repositoryMock.Object, _schoolAttendanceServiceMock.Object, _memberStatusHistoryServiceMock.Object);
             _baseDate = DateTime.UtcNow;
 
         }
 
         [Fact]
-        public async Task GetOptionsAsync_WhenCalled_ReturnOptionsCorretly()
+        public async Task GetOptionsAsync_WhenCalled_ReturnOptionsCorrectly()
         {
             var mockedMembers = GetMockedMembers();
 
@@ -53,7 +53,7 @@ namespace Piba.Services.Tests
             SetupForInactiveMembers(initiallyInactive);
 
             await _memberService.ReviewMembersActivityAsync();
-            _memberStatusHistoryServiceMock.Verify(r => r.CreateActivityHistoryForLastMonthIfItDoesNotExistAsync(), Times.Once);
+            _memberStatusHistoryServiceMock.Verify(r => r.CreateForLastMonthIfItDoesNotExistAsync(), Times.Once);
             _repositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
             Assert.Single(initiallyActive.Where(a => a.Status == MemberStatus.Active));
             Assert.Equal(2, initiallyActive.Where(a => a.LastStatusUpdate > _baseDate).Count());
