@@ -27,8 +27,8 @@ namespace Piba.Services.Tests
             _environmentVariablesMock = new Mock<EnvironmentVariables>();
             _excelServiceMock = new Mock<ExcelService>();
             _memberStatusHistoryService = new StatusHistoryServiceImp(
-                _statusHistoryRepositoryMock.Object, 
-                _memberRepositoryMock.Object, 
+                _statusHistoryRepositoryMock.Object,
+                _memberRepositoryMock.Object,
                 _statusHistoryItemRepositoryMock.Object,
                 _emailServiceMock.Object,
                 _schoolAttendanceRepositoryMock.Object,
@@ -43,12 +43,12 @@ namespace Piba.Services.Tests
             _statusHistoryRepositoryMock.Setup(m => m.HistoryForLastMonthExistsAsync())
                 .ReturnsAsync(true);
             await _memberStatusHistoryService.CreateForLastMonthIfItDoesNotExistAsync();
-            _statusHistoryRepositoryMock.Verify(r => 
-                r.CreateAsync(It.IsAny<StatusHistory>()), 
+            _statusHistoryRepositoryMock.Verify(r =>
+                r.CreateAsync(It.IsAny<StatusHistory>()),
                     Times.Never);
 
-            _statusHistoryItemRepositoryMock.Verify(r => 
-                r.CreateAsync(It.IsAny<IEnumerable<StatusHistoryItem>>()), 
+            _statusHistoryItemRepositoryMock.Verify(r =>
+                r.CreateAsync(It.IsAny<IEnumerable<StatusHistoryItem>>()),
                     Times.Never);
         }
 
@@ -68,35 +68,59 @@ namespace Piba.Services.Tests
 
             await _memberStatusHistoryService.CreateForLastMonthIfItDoesNotExistAsync();
 
-            _statusHistoryRepositoryMock.Verify(r => 
-                r.CreateAsync(It.Is<StatusHistory>(s => s.Id != Guid.Empty && s.IsSent == false)), 
+            _statusHistoryRepositoryMock.Verify(r =>
+                r.CreateAsync(It.Is<StatusHistory>(s => s.Id != Guid.Empty && s.IsSent == false)),
                 Times.Once);
 
-            _statusHistoryItemRepositoryMock.Verify(r => 
-                r.CreateAsync(It.Is<IEnumerable<StatusHistoryItem>>(e => 
+            _statusHistoryItemRepositoryMock.Verify(r =>
+                r.CreateAsync(It.Is<IEnumerable<StatusHistoryItem>>(e =>
                     e.Count() == members.Count() && e.All(i => i.StatusHistoryId != Guid.Empty))), Times.Once);
         }
 
         [Fact]
-        public async Task SendStatusHistoryEmailToReceiversAsync_WhenCalled_GenerateExcelCorrectly()
+        public async Task SendStatusHistoryEmailToReceiversAsync_WhenNotSent_SendFile()
         {
-            var fakeExcelFile = new byte[] { 1, 2, 3, 4, 5 };
 
             _statusHistoryRepositoryMock.Setup(m => m.HistoryForLastMonthExistsAsync())
                 .ReturnsAsync(true);
+
+            _statusHistoryRepositoryMock.Setup(r => r.IsHistoryOfLastMonthSent())
+                .ReturnsAsync(false);
+
+            var fakeExcelFile = new byte[] { 1, 2, 3, 4, 5 };
 
             _excelServiceMock.Setup(s => s.GenerateStatusHistoryAsync())
                 .ReturnsAsync(fakeExcelFile);
 
             await _memberStatusHistoryService.SendStatusHistoryEmailToReceiversAsync();
 
-            _statusHistoryRepositoryMock.Verify(r => 
+            _statusHistoryRepositoryMock.Verify(r =>
                 r.HistoryForLastMonthExistsAsync(),
                     Times.Once);
 
-            _emailServiceMock.Verify(e => 
-                e.SendEmailToDeveloper(It.Is<SendEmailDto>(e => e.Subject == "File"), fakeExcelFile), 
+            _emailServiceMock.Verify(r =>
+                r.SendEmailToDeveloper(It.Is<SendEmailDto>(e => e.Subject == "File"), fakeExcelFile),
                 Times.Once);
+
+            _statusHistoryRepositoryMock.Verify(r =>
+                r.MarkLastMonthHistoryAsSentAsync(),
+                Times.Once);
+        }
+
+        [Fact]
+        public async Task SendStatusHistoryEmailToReceivers_WhenSent_DontSendFile()
+        {
+            _statusHistoryRepositoryMock.Setup(m => m.HistoryForLastMonthExistsAsync())
+               .ReturnsAsync(true);
+
+            _statusHistoryRepositoryMock.Setup(r => r.IsHistoryOfLastMonthSent())
+                .ReturnsAsync(true);
+
+            await _memberStatusHistoryService.SendStatusHistoryEmailToReceiversAsync();
+
+            _emailServiceMock.Verify(s => 
+                s.SendEmailToDeveloper(It.IsAny<SendEmailDto>(), It.IsAny<byte[]>()), 
+                Times.Never);
         }
     }
 }

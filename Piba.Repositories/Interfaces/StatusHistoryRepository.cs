@@ -6,5 +6,7 @@ namespace Piba.Repositories.Interfaces
     {
         Task CreateAsync(StatusHistory statusHistory);
         Task<bool> HistoryForLastMonthExistsAsync();
+        Task<bool> IsHistoryOfLastMonthSent();
+        Task MarkLastMonthHistoryAsSentAsync();
     }
 }

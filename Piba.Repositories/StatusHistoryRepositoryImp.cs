@@ -14,13 +14,6 @@ namespace Piba.Repositories
             _pibaDbContext = pibaDbContext;
         }
 
-        public async Task CreateAsync(IEnumerable<StatusHistoryItem> histories)
-        {
-            var historySet = _pibaDbContext.Set<StatusHistoryItem>();
-            historySet.AddRange(histories);
-            await _pibaDbContext.SaveChangesAsync();
-        }
-
         public async Task CreateAsync(StatusHistory statusHistory)
         {
             _pibaDbContext.Entry(statusHistory).State = EntityState.Added;
@@ -32,6 +25,16 @@ namespace Piba.Repositories
             var historySet = _pibaDbContext.Set<StatusHistory>();
             var aMonthAgo = DateTime.UtcNow.AddMonths(-1);
             return await historySet.AnyAsync(h => h.Year == aMonthAgo.Year && h.Month == aMonthAgo.Month);
+        }
+
+        public Task<bool> IsHistoryOfLastMonthSent()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task MarkLastMonthHistoryAsSentAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }
