@@ -1,4 +1,6 @@
-﻿using Piba.Data.Entities;
+﻿using Piba.Data.Dto;
+using Piba.Data.Entities;
+using Piba.Data.Enums;
 using Piba.Repositories.Interfaces;
 using Piba.Services.Interfaces;
 
@@ -10,17 +12,26 @@ namespace Piba.Services
         private readonly MemberRepository _memberRepository;
         private readonly StatusHistoryItemRepository _statusHistoryItemRepository;
         private readonly EmailService _emailService;
+        private readonly SchoolAttendanceRepository _schoolAttendanceRepository;
+        private readonly EnvironmentVariables _environmentVariables;
+        private readonly ExcelService _excelService;
 
         public StatusHistoryServiceImp(
             StatusHistoryRepository statusHistoryRepository,
             MemberRepository memberRepository,
             StatusHistoryItemRepository statusHistoryItemRepository,
-            EmailService emailService)
+            EmailService emailService,
+            SchoolAttendanceRepository schoolAttendanceRepository,
+            EnvironmentVariables environmentVariables,
+            ExcelService excelService)
         {
             _statusHistoryRepository = statusHistoryRepository;
             _memberRepository = memberRepository;
             _statusHistoryItemRepository = statusHistoryItemRepository;
             _emailService = emailService;
+            _schoolAttendanceRepository = schoolAttendanceRepository;
+            _environmentVariables = environmentVariables;
+            _excelService = excelService;
         }
 
         public async Task CreateForLastMonthIfItDoesNotExistAsync()
@@ -44,16 +55,7 @@ namespace Piba.Services
         public async Task SendStatusHistoryEmailToReceiversAsync()
         {
             await CreateForLastMonthIfItDoesNotExistAsync();
-            using var excelWrapper = new ExcelWrapper();
-            excelWrapper.AddWorksheet<StatusHistoryItem>(new("test")
-            {
-                Map = new()
-                {
-                    ["Nome"] = r => r.MemberId
-                },
-                Rows = new() { new() { MemberId = Guid.NewGuid() } }
-            });
-            var excelFile = await excelWrapper.GetByteArrayAsync();
+            var excelFile = await _excelService.GenerateStatusHistoryAsync();
             _emailService.SendEmailToDeveloper(new() { Subject = "File" }, excelFile);
         }
     }

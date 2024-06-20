@@ -50,5 +50,12 @@ namespace Piba.Repositories
                  .Where(m => new[] { MemberStatus.Inactive, MemberStatus.Active }.Contains(m.Status))
                  .ToListAsync();
         }
+
+        public async Task<List<Member>> GetAllAlwaysExcusedAsync()
+        {
+            return await _dbContext.Set<Member>()
+                .Where(m => m.Status == MemberStatus.AlwaysExcused)
+                .ToListAsync();
+        }
     }
 }

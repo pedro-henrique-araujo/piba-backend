@@ -5,13 +5,13 @@ using System.Net.Mail;
 
 namespace Piba.Services.Tests
 {
-    public class EmailServceImpTests
+    public class EmailServiceImpTests
     {
         private readonly Mock<SmtpClientWrapper> _smtpPibaClientMock;
         private readonly Mock<EnvironmentVariables> _environmentVariablesMock;
         private readonly EmailServiceImp _emailService;
 
-        public EmailServceImpTests()
+        public EmailServiceImpTests()
         {
             _smtpPibaClientMock = new Mock<SmtpClientWrapper>();
             _environmentVariablesMock = new Mock<EnvironmentVariables>();

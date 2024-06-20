@@ -21,7 +21,7 @@ namespace Piba.Services.Tests
             excelWrapper.AddWorksheet<TestValues>(new(name: "a"));
             excelWrapper.AddWorksheet<TestValues>(new(name: "b"));
             excelWrapper.AddWorksheet<TestValues>(new(name: "c"));
-            using var package = LoadPackage(await excelWrapper.GetByteArrayAsync());
+            using var package = Common.LoadExcelPackage(await excelWrapper.GetByteArrayAsync());
             Assert.Equal(3, package.Workbook.Worksheets.Count);
 
         }
@@ -47,7 +47,7 @@ namespace Piba.Services.Tests
                 }
             });
 
-            using var package = LoadPackage(await excelWrapper.GetByteArrayAsync());
+            using var package = Common.LoadExcelPackage(await excelWrapper.GetByteArrayAsync());
             _worksheets.Add(package.Workbook.Worksheets.First());
             var worksheet = _worksheets.First();
 
@@ -99,12 +99,6 @@ namespace Piba.Services.Tests
             Assert.Equal("d", cells["E2"].Value);
 
             Assert.True(cells["B2:E2"].Style.Font.Bold);
-        }
-
-        private ExcelPackage LoadPackage(byte[] bytes)
-        {
-            using var stream = new MemoryStream(bytes);
-            return new ExcelPackage(stream);
         }
     }
 

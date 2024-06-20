@@ -53,7 +53,7 @@ namespace Piba.Services.Tests
 
 
             var memberId = Guid.NewGuid();
-            _repositoryMock.Setup(r => r.GetByDatesAsync(It.Is<MemberClassesByDatesFilter>(m =>
+            _repositoryMock.Setup(r => r.GetByDatesAsync(It.Is<MemberAttendancesByDatesFilter>(m =>
                         m.MemberId == memberId
                         && m.Dates == classesDates
                         && m.MinValidTime == minValidTime
@@ -83,7 +83,7 @@ namespace Piba.Services.Tests
                    .ReturnsAsync(classesDates);
 
             var memberId = Guid.NewGuid();
-            _repositoryMock.Setup(r => r.GetByDatesAsync(It.Is<MemberClassesByDatesFilter>(m =>
+            _repositoryMock.Setup(r => r.GetByDatesAsync(It.Is<MemberAttendancesByDatesFilter>(m =>
                         m.MemberId == memberId
                         && m.Dates == classesDates
                         && m.MinValidTime == minValidTime

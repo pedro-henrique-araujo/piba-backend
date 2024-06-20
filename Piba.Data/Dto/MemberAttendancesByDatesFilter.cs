@@ -1,6 +1,6 @@
 ﻿namespace Piba.Data.Dto
 {
-    public class MemberClassesByDatesFilter
+    public class MemberAttendancesByDatesFilter
     {
         public Guid MemberId { get; set; }
         public List<DateTime> Dates { get; set; }

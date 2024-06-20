@@ -9,6 +9,7 @@ namespace Piba.Repositories.Interfaces
         Task<List<Member>> GetAllInactiveAndActiveAsync();
         Task<List<MemberOptionDto>> GetAllInactiveAndActiveOptionsAsync();
         Task<List<Member>> GetAllInactiveAsync();
+        Task<List<Member>> GetAllAlwaysExcusedAsync();
         Task SaveChangesAsync();
     }
 }

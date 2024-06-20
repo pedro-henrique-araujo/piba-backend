@@ -1,4 +1,5 @@
 ﻿using Moq;
+using Piba.Data.Dto;
 using Piba.Data.Entities;
 using Piba.Repositories.Interfaces;
 using Piba.Services.Interfaces;
@@ -11,6 +12,9 @@ namespace Piba.Services.Tests
         private readonly Mock<MemberRepository> _memberRepositoryMock;
         private readonly Mock<StatusHistoryItemRepository> _statusHistoryItemRepositoryMock;
         private readonly Mock<EmailService> _emailServiceMock;
+        private readonly Mock<SchoolAttendanceRepository> _schoolAttendanceRepositoryMock;
+        private readonly Mock<EnvironmentVariables> _environmentVariablesMock;
+        private readonly Mock<ExcelService> _excelServiceMock;
         private readonly StatusHistoryServiceImp _memberStatusHistoryService;
 
         public StatusHistoryServiceTest()
@@ -19,11 +23,17 @@ namespace Piba.Services.Tests
             _memberRepositoryMock = new Mock<MemberRepository>();
             _statusHistoryItemRepositoryMock = new Mock<StatusHistoryItemRepository>();
             _emailServiceMock = new Mock<EmailService>();
+            _schoolAttendanceRepositoryMock = new Mock<SchoolAttendanceRepository>();
+            _environmentVariablesMock = new Mock<EnvironmentVariables>();
+            _excelServiceMock = new Mock<ExcelService>();
             _memberStatusHistoryService = new StatusHistoryServiceImp(
                 _statusHistoryRepositoryMock.Object, 
                 _memberRepositoryMock.Object, 
                 _statusHistoryItemRepositoryMock.Object,
-                _emailServiceMock.Object
+                _emailServiceMock.Object,
+                _schoolAttendanceRepositoryMock.Object,
+                _environmentVariablesMock.Object,
+                _excelServiceMock.Object
                 );
         }
 
@@ -65,6 +75,28 @@ namespace Piba.Services.Tests
             _statusHistoryItemRepositoryMock.Verify(r => 
                 r.CreateAsync(It.Is<IEnumerable<StatusHistoryItem>>(e => 
                     e.Count() == members.Count() && e.All(i => i.StatusHistoryId != Guid.Empty))), Times.Once);
+        }
+
+        [Fact]
+        public async Task SendStatusHistoryEmailToReceiversAsync_WhenCalled_GenerateExcelCorrectly()
+        {
+            var fakeExcelFile = new byte[] { 1, 2, 3, 4, 5 };
+
+            _statusHistoryRepositoryMock.Setup(m => m.HistoryForLastMonthExistsAsync())
+                .ReturnsAsync(true);
+
+            _excelServiceMock.Setup(s => s.GenerateStatusHistoryAsync())
+                .ReturnsAsync(fakeExcelFile);
+
+            await _memberStatusHistoryService.SendStatusHistoryEmailToReceiversAsync();
+
+            _statusHistoryRepositoryMock.Verify(r => 
+                r.HistoryForLastMonthExistsAsync(),
+                    Times.Once);
+
+            _emailServiceMock.Verify(e => 
+                e.SendEmailToDeveloper(It.Is<SendEmailDto>(e => e.Subject == "File"), fakeExcelFile), 
+                Times.Once);
         }
     }
 }

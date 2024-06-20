@@ -23,6 +23,9 @@ builder.Services.AddDbContext<PibaDbContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
+
+builder.Services.AddScoped<EmailService, EmailServiceImp>();
+
 builder.Services.AddScoped<MemberService, MemberServiceImp>();
 builder.Services.AddScoped<SchoolAttendanceService, SchoolAttendanceServiceImp>();
 builder.Services.AddScoped<SaturdayWithoutClassService, SaturdayWithoutClassServiceImp>();
