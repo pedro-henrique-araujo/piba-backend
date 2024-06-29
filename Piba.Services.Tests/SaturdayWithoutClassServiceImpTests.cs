@@ -18,7 +18,7 @@ namespace Piba.Services.Tests
         public async Task GetLastThreeClassesDatesAsync_WhenNoSaturdayWithoutClass_ReturnCorrectly()
         {
             var lastSaturday = GetLastSaturday();
-            _repositoryMock.Setup(r => r.DateHasClassAsync(It.IsAny<DateTime>()))
+            _repositoryMock.Setup(r => r.DateWouldHaveClassAsync(It.IsAny<DateTime>()))
                 .ReturnsAsync(true);
 
             var days = await _saturdayWithoutClassRepository.GetLastThreeClassesDatesAsync();
@@ -32,10 +32,10 @@ namespace Piba.Services.Tests
         public async Task GetLastThreeClassesDatesAsync_WhenLastHadNoClasses_ReturnCorrectly()
         {
             var lastSaturday = GetLastSaturday();
-            _repositoryMock.Setup(r => r.DateHasClassAsync(It.Is<DateTime>(d => d == lastSaturday)))
+            _repositoryMock.Setup(r => r.DateWouldHaveClassAsync(It.Is<DateTime>(d => d == lastSaturday)))
                 .ReturnsAsync(false);
 
-            _repositoryMock.Setup(r => r.DateHasClassAsync(It.Is<DateTime>(d => d != lastSaturday)))
+            _repositoryMock.Setup(r => r.DateWouldHaveClassAsync(It.Is<DateTime>(d => d != lastSaturday)))
                 .ReturnsAsync(true);
 
             var days = await _saturdayWithoutClassRepository.GetLastThreeClassesDatesAsync();
@@ -50,9 +50,9 @@ namespace Piba.Services.Tests
         public async Task GetLastThreeClassesDatesAsync_WhenTwoWeeksBeforeLastSaturdayHadNoClasses_ReturnCorrectly()
         {
             var lastSaturday = GetLastSaturday();
-            _repositoryMock.Setup(r => r.DateHasClassAsync(It.Is<DateTime>(d => d == lastSaturday.AddDays(-7))))
+            _repositoryMock.Setup(r => r.DateWouldHaveClassAsync(It.Is<DateTime>(d => d == lastSaturday.AddDays(-7))))
                 .ReturnsAsync(false);
-            _repositoryMock.Setup(r => r.DateHasClassAsync(It.Is<DateTime>(d => d != lastSaturday.AddDays(-7))))
+            _repositoryMock.Setup(r => r.DateWouldHaveClassAsync(It.Is<DateTime>(d => d != lastSaturday.AddDays(-7))))
                .ReturnsAsync(true);
 
             var days = await _saturdayWithoutClassRepository.GetLastThreeClassesDatesAsync();

@@ -152,7 +152,7 @@ namespace Piba.Services.Tests
 
         private void SetupGetLastMonthsExcuses()
         {
-            _schoolAttendanceRepositoryMock.Setup(r => r.GetLastMonthsExcusesAsync())
+            _schoolAttendanceRepositoryMock.Setup(r => r.GetLastMonthExcusesAsync())
                 .ReturnsAsync(new List<SchoolAttendance>
                 {
                     new()

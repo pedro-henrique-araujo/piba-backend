@@ -86,7 +86,7 @@ namespace Piba.Services
 
         private async Task IncludeLastMonthsExcusesAsync(ExcelWrapper excelWrapper)
         {
-            var lastMonthExcuses = await _schoolAttendanceRepository.GetLastMonthsExcusesAsync();
+            var lastMonthExcuses = await _schoolAttendanceRepository.GetLastMonthExcusesAsync();
             excelWrapper.AddWorksheet<SchoolAttendance>(new("Justificativas")
             {
                 Map = new()

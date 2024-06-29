@@ -6,7 +6,7 @@ using Piba.Services.Interfaces;
 
 namespace Piba.Services.Tests
 {
-    public class StatusHistoryServiceTest
+    public class StatusHistoryServiceTests
     {
         private readonly Mock<StatusHistoryRepository> _statusHistoryRepositoryMock;
         private readonly Mock<MemberRepository> _memberRepositoryMock;
@@ -17,7 +17,7 @@ namespace Piba.Services.Tests
         private readonly Mock<ExcelService> _excelServiceMock;
         private readonly StatusHistoryServiceImp _memberStatusHistoryService;
 
-        public StatusHistoryServiceTest()
+        public StatusHistoryServiceTests()
         {
             _statusHistoryRepositoryMock = new Mock<StatusHistoryRepository>();
             _memberRepositoryMock = new Mock<MemberRepository>();

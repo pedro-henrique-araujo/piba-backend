@@ -24,8 +24,8 @@ namespace Piba.Repositories
         public async Task<int> GetByDatesAsync(MemberAttendancesByDatesFilter filter)
         {
             return await _dbContext.Set<SchoolAttendance>()
-                .Where(a => 
-                    a.MemberId == filter.MemberId 
+                .Where(a =>
+                    a.MemberId == filter.MemberId
                     && filter.Dates.Contains(a.CreatedDate.Value.Date)
                     && a.CreatedDate.Value.TimeOfDay >= filter.MinValidTime
                     && a.CreatedDate.Value.TimeOfDay <= filter.MaxValidTime)
@@ -34,12 +34,14 @@ namespace Piba.Repositories
                 .CountAsync();
         }
 
-        public async Task<List<SchoolAttendance>> GetLastMonthsExcusesAsync()
+        public async Task<List<SchoolAttendance>> GetLastMonthExcusesAsync()
         {
             var aMonthAgo = DateTime.UtcNow.AddMonths(-1);
             return await _dbContext.Set<SchoolAttendance>()
-                .Where(a =>  a.CreatedDate.Value.Month == aMonthAgo.Month
-                    && a.CreatedDate.Value.Year == aMonthAgo.Year)
+                .Where(a =>
+                    a.CreatedDate.Value.Month == aMonthAgo.Month
+                    && a.CreatedDate.Value.Year == aMonthAgo.Year
+                    )
                 .ToListAsync();
         }
     }

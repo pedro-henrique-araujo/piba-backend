@@ -28,11 +28,14 @@ namespace Piba.Repositories
         {
             var aMonthAgo = DateTime.UtcNow.AddMonths(-1);
             var lastMonthSchoolAttendance = _pibaDbContext.Set<SchoolAttendance>()
-                .Where(a => a.CreatedDate.Value.Month == aMonthAgo.Month
+                .Where(a => 
+                    a.CreatedDate.Value.Month == aMonthAgo.Month
                     && a.CreatedDate.Value.Year == aMonthAgo.Year
-                    && (a.IsPresent == false || 
-                        a.CreatedDate.Value.TimeOfDay >= filter.MinValidTime
-                    && a.CreatedDate.Value.TimeOfDay <= filter.MaxValidTime));
+                    && (a.IsPresent == false
+                      || 
+                      a.CreatedDate.Value.TimeOfDay >= filter.MinValidTime
+                       &&  a.CreatedDate.Value.TimeOfDay <= filter.MaxValidTime)
+                        );
 
             var set = _pibaDbContext.Set<StatusHistoryItem>();
             return await set
@@ -40,12 +43,13 @@ namespace Piba.Repositories
                     && i.StatusHistory.Year == aMonthAgo.Year)
                 .Include(i => i.Member)
                 .Join(
-                    _pibaDbContext.Set<SchoolAttendance>(),
+                    lastMonthSchoolAttendance,
                     i => i.MemberId,
                     a => a.MemberId,
                     (item, atendance) => new
                     {
                         item.Member,
+                        item.Status,
                         Attendance = atendance
 
                     })
@@ -53,9 +57,11 @@ namespace Piba.Repositories
                 .Select(g => new StatusHistoryReportDto
                 {
                     Name = g.Key.Name,
-                    Status = g.Key.Status,
+                    Status = g.First().Status,
                     Count = g.Count(),
-                }).ToListAsync();
+                })
+                .OrderBy(i => i.Name)
+                .ToListAsync();
         }
     }
 }
