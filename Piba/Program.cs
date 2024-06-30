@@ -25,20 +25,21 @@ builder.Services.AddDbContext<PibaDbContext>(options =>
 
 
 builder.Services.AddScoped<EmailService, EmailServiceImp>();
-
+builder.Services.AddScoped<EnvironmentVariables, WebApiEnvironmentVariables>();
+builder.Services.AddScoped<ExcelService, ExcelServiceImp>();
+builder.Services.AddScoped<LogService, LogServiceImp>();
 builder.Services.AddScoped<MemberService, MemberServiceImp>();
-builder.Services.AddScoped<SchoolAttendanceService, SchoolAttendanceServiceImp>();
 builder.Services.AddScoped<SaturdayWithoutClassService, SaturdayWithoutClassServiceImp>();
+builder.Services.AddScoped<SchoolAttendanceService, SchoolAttendanceServiceImp>();
+builder.Services.AddScoped<SmtpClientWrapper, SmtpClientWrapperImp>();
 builder.Services.AddScoped<StatusHistoryService, StatusHistoryServiceImp>();
 
+builder.Services.AddScoped<LogRepository, LogRepositoryImp>();
 builder.Services.AddScoped<MemberRepository, MemberRepositoryImp>();
-builder.Services.AddScoped<SchoolAttendanceRepository, SchoolAttendanceRepositoryImp>();
 builder.Services.AddScoped<SaturdayWithoutClassRepository, SaturdayWithoutClassRepositoryImp>();
-builder.Services.AddScoped<StatusHistoryRepository, StatusHistoryRepositoryImp>();
+builder.Services.AddScoped<SchoolAttendanceRepository, SchoolAttendanceRepositoryImp>();
 builder.Services.AddScoped<StatusHistoryItemRepository, StatusHistoryItemRepositoryImp>();
-
-builder.Services.AddScoped<SmtpClientWrapper, SmtpClientWrapperImp>();
-builder.Services.AddScoped<EnvironmentVariables, EnvironmentVariablesImp>();
+builder.Services.AddScoped<StatusHistoryRepository, StatusHistoryRepositoryImp>();
 
 var app = builder.Build();
 

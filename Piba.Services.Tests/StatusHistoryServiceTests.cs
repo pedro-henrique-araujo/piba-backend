@@ -84,7 +84,7 @@ namespace Piba.Services.Tests
             _statusHistoryRepositoryMock.Setup(m => m.HistoryForLastMonthExistsAsync())
                 .ReturnsAsync(true);
 
-            _statusHistoryRepositoryMock.Setup(r => r.IsHistoryOfLastMonthSent())
+            _statusHistoryRepositoryMock.Setup(r => r.IsHistoryOfLastMonthSentAsync())
                 .ReturnsAsync(false);
 
             var fakeExcelFile = new byte[] { 1, 2, 3, 4, 5 };
@@ -113,7 +113,7 @@ namespace Piba.Services.Tests
             _statusHistoryRepositoryMock.Setup(m => m.HistoryForLastMonthExistsAsync())
                .ReturnsAsync(true);
 
-            _statusHistoryRepositoryMock.Setup(r => r.IsHistoryOfLastMonthSent())
+            _statusHistoryRepositoryMock.Setup(r => r.IsHistoryOfLastMonthSentAsync())
                 .ReturnsAsync(true);
 
             await _memberStatusHistoryService.SendStatusHistoryEmailToReceiversAsync();

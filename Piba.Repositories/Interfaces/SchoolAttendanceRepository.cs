@@ -8,5 +8,6 @@ namespace Piba.Repositories.Interfaces
         Task CreateAsync(SchoolAttendance schoolAttendance);
         Task<int> GetByDatesAsync(MemberAttendancesByDatesFilter filter);
         Task<List<SchoolAttendance>> GetLastMonthExcusesAsync();
+        IQueryable<SchoolAttendance> GetLastMonthsSchoolAttendanceQueryable(ValidTimeFilter filter);
     }
 }

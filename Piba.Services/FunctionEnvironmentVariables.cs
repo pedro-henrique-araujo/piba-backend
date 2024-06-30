@@ -2,7 +2,7 @@
 
 namespace Piba.Services
 {
-    public class EnvironmentVariablesImp : EnvironmentVariables
+    public class FunctionEnvironmentVariables : EnvironmentVariables
     {
         public string DeveloperEmail { get; }
         public string EmailHost { get; }
@@ -13,7 +13,7 @@ namespace Piba.Services
 
         public TimeSpan MaxValidTime { get; }
 
-        public EnvironmentVariablesImp()
+        public FunctionEnvironmentVariables()
         {
             DeveloperEmail = GetVariableValue("DeveloperEmail");
             EmailHost = GetVariableValue("SmtpHost");

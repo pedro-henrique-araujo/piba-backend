@@ -9,10 +9,12 @@ namespace Piba.Repositories
     public class StatusHistoryItemRepositoryImp : StatusHistoryItemRepository
     {
         private readonly PibaDbContext _pibaDbContext;
+        private readonly SchoolAttendanceRepository _schoolAttendanceRepository;
 
-        public StatusHistoryItemRepositoryImp(PibaDbContext pibaDbContext)
+        public StatusHistoryItemRepositoryImp(PibaDbContext pibaDbContext, SchoolAttendanceRepository schoolAttendanceRepository)
         {
             _pibaDbContext = pibaDbContext;
+            _schoolAttendanceRepository = schoolAttendanceRepository;
         }
 
         public async Task CreateAsync(IEnumerable<StatusHistoryItem> items)
@@ -27,21 +29,15 @@ namespace Piba.Repositories
         public async Task<List<StatusHistoryReportDto>> GetLastHistoryAsync(ValidTimeFilter filter)
         {
             var aMonthAgo = DateTime.UtcNow.AddMonths(-1);
-            var lastMonthSchoolAttendance = _pibaDbContext.Set<SchoolAttendance>()
-                .Where(a => 
-                    a.CreatedDate.Value.Month == aMonthAgo.Month
-                    && a.CreatedDate.Value.Year == aMonthAgo.Year
-                    && (a.IsPresent == false
-                      || 
-                      a.CreatedDate.Value.TimeOfDay >= filter.MinValidTime
-                       &&  a.CreatedDate.Value.TimeOfDay <= filter.MaxValidTime)
-                        );
+            var lastMonthSchoolAttendance = _schoolAttendanceRepository
+                .GetLastMonthsSchoolAttendanceQueryable(filter);
 
             var set = _pibaDbContext.Set<StatusHistoryItem>();
             return await set
-                .Where(i => i.StatusHistory.Month == aMonthAgo.Month
-                    && i.StatusHistory.Year == aMonthAgo.Year)
-                .Include(i => i.Member)
+                .Where(i =>
+                        i.StatusHistory.Month == aMonthAgo.Month
+                        && i.StatusHistory.Year == aMonthAgo.Year
+                    )
                 .Join(
                     lastMonthSchoolAttendance,
                     i => i.MemberId,

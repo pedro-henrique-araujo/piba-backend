@@ -44,5 +44,21 @@ namespace Piba.Repositories
                     )
                 .ToListAsync();
         }
+
+        public IQueryable<SchoolAttendance> GetLastMonthsSchoolAttendanceQueryable(ValidTimeFilter filter)
+        {
+            var aMonthAgo = DateTime.UtcNow.AddMonths(-1);
+            var queryable = _dbContext.Set<SchoolAttendance>()
+                .Where(a =>
+                    a.CreatedDate.Value.Month == aMonthAgo.Month
+                    && a.CreatedDate.Value.Year == aMonthAgo.Year
+                    && (a.IsPresent == false
+                       || a.CreatedDate.Value.TimeOfDay >= filter.MinValidTime
+                       && a.CreatedDate.Value.TimeOfDay <= filter.MaxValidTime
+                       )
+                 );
+
+            return queryable;
+        }
     }
 }

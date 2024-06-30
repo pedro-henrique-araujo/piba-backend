@@ -55,7 +55,7 @@ namespace Piba.Services
         public async Task SendStatusHistoryEmailToReceiversAsync()
         {
             await CreateForLastMonthIfItDoesNotExistAsync();
-            if (await _statusHistoryRepository.IsHistoryOfLastMonthSent()) return;
+            if (await _statusHistoryRepository.IsHistoryOfLastMonthSentAsync()) return;
             var excelFile = await _excelService.GenerateStatusHistoryAsync();
             _emailService.SendEmailToDeveloper(new() { Subject = "File" }, excelFile);
             await _statusHistoryRepository.MarkLastMonthHistoryAsSentAsync();

@@ -14,7 +14,10 @@ namespace Piba.Repositories.Tests
         public StatusHistoryItemRepositoryImpTests()
         {
             _pibaDbContext = Common.GenerateInMemoryDatabase(nameof(StatusHistoryItemRepositoryImpTests));
-            _statusHistoryItemRepository = new StatusHistoryItemRepositoryImp(_pibaDbContext);
+            _statusHistoryItemRepository = new StatusHistoryItemRepositoryImp(
+                _pibaDbContext, 
+                new SchoolAttendanceRepositoryImp(_pibaDbContext));
+
             var utcNow = DateTime.UtcNow;
             _baseDate = new DateTime(utcNow.Year, utcNow.Month, 1, 18, 0, 0);
         }
@@ -46,126 +49,71 @@ namespace Piba.Repositories.Tests
         }
 
         [Fact]
-        public async Task GetLastHistoryAsync_ShouldReturnLastMonthStatusHistory()
+        public async Task GetLastHistoryAsync_WhenCalled_ReturnCorrectData()
         {
-            var aMonthAgo = _baseDate.AddMonths(-1);
-            var history = new StatusHistory { Month = aMonthAgo.Month, Year = aMonthAgo.Year };
-            var members = new List<Member>()
-            {
-                new()
-                {
-                    Name = "A"
-                },
-                new()
-                {
-                    Name = "B"
-                },
-                new()
-                {
-                    Name = "C"
-                }
-            };
-           
-            var attendances = new List<SchoolAttendance>
-            {
-                new()
-                {
-                    Member = members[0],
-                    CreatedDate = aMonthAgo,
-                    IsPresent = true
-                }, 
-                new()
-                {
-                    Member = members[0],
-                    CreatedDate = aMonthAgo,
-                    IsPresent = true
-                },
-                new()
-                {
-                    Member = members[1],
-                    CreatedDate = aMonthAgo.AddHours(-1),
-                    IsPresent = false
-                },
-                new()
-                {
-                    Member = members[1],
-                    CreatedDate = aMonthAgo.AddHours(-2),
-                    IsPresent = true
-                },
-                new()
-                {
-                    Member = members[1],
-                    CreatedDate = aMonthAgo.AddHours(2),
-                    IsPresent = true
-                },
-                new()
-                {
-                    Member = members[1],
-                    CreatedDate = _baseDate,
-                    IsPresent = true
-                },
-                new()
-                {
-                    Member = members[1],
-                    CreatedDate = aMonthAgo.AddYears(-1),
-                    IsPresent = true
-                }, 
-                new()
-                {
-                    Member = members[2],
-                    CreatedDate = aMonthAgo.AddHours(1),
-                    IsPresent = true
-                },
-            };
+            var member1 = new Member { Name = "B", Status = MemberStatus.Inactive };
+            var member2 = new Member { Name = "A", Status = MemberStatus.Inactive };
+            var lastMonth = _baseDate.AddMonths(-1);
+            var lastYear = _baseDate.AddYears(-1).AddMonths(-1);
 
-            await _pibaDbContext.Set<SchoolAttendance>().AddRangeAsync(attendances);
-            await _pibaDbContext.SaveChangesAsync();
+            var history = new StatusHistory { Month = lastMonth.Month, Year = lastMonth.Year };
+            var history2 = new StatusHistory { Month = lastYear.Month, Year = lastYear.Year };
+            var history3 = new StatusHistory { Month = _baseDate.Month, Year = _baseDate.Year };
 
             var items = new List<StatusHistoryItem>
             {
                 new()
                 {
-                    Member = members[0],
-                    StatusHistory = history,
-                    Status = MemberStatus.Active
+                    Member = member1,
+                    Status = MemberStatus.Active,
+                    StatusHistory = history
                 },
                 new()
                 {
-                    Member = members[1],
-                    StatusHistory = history,
-                    Status = MemberStatus.Inactive
+                    Member = member2,
+                    Status = MemberStatus.Inactive,
+                    StatusHistory = history
                 },
                 new()
                 {
-                    Member = members[2],
-                    StatusHistory = history,
-                    Status = MemberStatus.Active
+                    Member = member1,
+                    Status = MemberStatus.Active,
+                    StatusHistory = history2
                 },
+                new()
+                {
+                    Member = member1,
+                    Status = MemberStatus.Active,
+                    StatusHistory = history3
+                }
             };
-            
-            await _statusHistoryItemRepository.CreateAsync(items);
+
+            var schoolAttendance = new List<SchoolAttendance>
+            {
+                new() { Member = member1, CreatedDate = _baseDate.AddMonths(-1) },
+                new() { Member = member1, CreatedDate = _baseDate.AddMonths(-1) },
+                new() { Member = member2, CreatedDate = _baseDate.AddMonths(-1) }
+            };
+
+            await _pibaDbContext.AddRangeAsync(items);
+            await _pibaDbContext.AddRangeAsync(schoolAttendance);
+
+            await _pibaDbContext.SaveChangesAsync();
 
             var filter = new ValidTimeFilter
             {
-                MinValidTime = new TimeSpan(18, 0, 0),
-                MaxValidTime = new TimeSpan(19, 0, 0)
+               MinValidTime = TimeSpan.FromHours(0),
+               MaxValidTime = TimeSpan.FromHours(0)
             };
 
-            var lastMonthHistory = await _statusHistoryItemRepository.GetLastHistoryAsync(filter);
-
-            Assert.Equal(3, lastMonthHistory.Count);
-
-            Assert.Equal("A", lastMonthHistory.First().Name);
-            Assert.Equal(MemberStatus.Active, lastMonthHistory.First().Status);
-            Assert.Equal(2, lastMonthHistory.First().Count);
-
-            Assert.Equal("B", lastMonthHistory.Last().Name);
-            Assert.Equal(MemberStatus.Inactive, lastMonthHistory.Last().Status);
-            Assert.Equal(1, lastMonthHistory.Last().Count);
-
-            Assert.Equal("C", lastMonthHistory[1].Name);
-            Assert.Equal(MemberStatus.Active, lastMonthHistory[1].Status);
-            Assert.Equal(1, lastMonthHistory[1].Count);
+            var result = await _statusHistoryItemRepository.GetLastHistoryAsync(filter);
+            Assert.Equal(2, result.Count());
+            Assert.Equal("A", result.First().Name);
+            Assert.Equal(MemberStatus.Inactive, result.First().Status);
+            Assert.Equal(1, result.First().Count);
+            Assert.Equal("B", result.Last().Name);
+            Assert.Equal(MemberStatus.Active, result.Last().Status);
+            Assert.Equal(2, result.Last().Count);
         }
 
         public void Dispose()

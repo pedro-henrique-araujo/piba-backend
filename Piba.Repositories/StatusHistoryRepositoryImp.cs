@@ -2,6 +2,7 @@
 using Piba.Data;
 using Piba.Data.Entities;
 using Piba.Repositories.Interfaces;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Piba.Repositories
 {
@@ -27,14 +28,27 @@ namespace Piba.Repositories
             return await historySet.AnyAsync(h => h.Year == aMonthAgo.Year && h.Month == aMonthAgo.Month);
         }
 
-        public Task<bool> IsHistoryOfLastMonthSent()
+        public async Task<bool> IsHistoryOfLastMonthSentAsync()
         {
-            throw new NotImplementedException();
+            var aMonthAgo = DateTime.UtcNow.AddMonths(-1);
+            var historySet = _pibaDbContext.Set<StatusHistory>();
+            var isSent = await historySet
+                .Where(h => h.Year == aMonthAgo.Year && h.Month == aMonthAgo.Month)
+                .Select(h => h.IsSent)
+                .FirstOrDefaultAsync();
+            return isSent;
         }
 
-        public Task MarkLastMonthHistoryAsSentAsync()
+        public async Task MarkLastMonthHistoryAsSentAsync()
         {
-            throw new NotImplementedException();
+            var aMonthAgo = DateTime.UtcNow.AddMonths(-1);
+            var historySet = _pibaDbContext.Set<StatusHistory>();
+            var history = await historySet
+                .Where(h => h.Year == aMonthAgo.Year && h.Month == aMonthAgo.Month)
+                .FirstOrDefaultAsync();
+            if (history is null) return;
+            history.IsSent = true;
+            await _pibaDbContext.SaveChangesAsync();
         }
     }
 }
