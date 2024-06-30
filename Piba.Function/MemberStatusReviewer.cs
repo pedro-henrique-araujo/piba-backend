@@ -10,7 +10,10 @@ namespace Piba.Function
         private readonly MemberService _memberService;
         private readonly EmailService _emailService;
 
-        public MemberStatusReviewer(LogService logService, MemberService memberService, EmailService emailService)
+        public MemberStatusReviewer(
+            LogService logService, 
+            MemberService memberService,
+            EmailService emailService)
         {
             _logService = logService;
             _memberService = memberService;
@@ -19,7 +22,7 @@ namespace Piba.Function
 
         [Function(nameof(ReviewMembersActivityTimerTriggerAsync))]
         public async Task ReviewMembersActivityTimerTriggerAsync(
-            [TimerTrigger("0 0 0 * * *", RunOnStartup = true)] TimerInfo myTimer)
+            [TimerTrigger("0 0 0 * * *", RunOnStartup = false)] TimerInfo timerInfo)
         {
             await ReviewMembersActivityAsync();
         }

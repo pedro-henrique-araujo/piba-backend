@@ -18,7 +18,7 @@ namespace Piba.Services
             var selectedSaturday = today.AddDays(-1 - (double)today.DayOfWeek);
             do
             {
-                if (await _saturdayWithoutClassRepository.DateHasClassAsync(selectedSaturday))
+                if (await _saturdayWithoutClassRepository.DateWouldHaveClassAsync(selectedSaturday))
                 {
                     output.Add(selectedSaturday);
                 }

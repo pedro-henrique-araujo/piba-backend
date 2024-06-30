@@ -6,11 +6,16 @@ namespace Piba.Services
 {
     public class SchoolAttendanceServiceImp : SchoolAttendanceService
     {
+        private readonly EnvironmentVariables _envioronmentVariables;
         private readonly SchoolAttendanceRepository _schoolAttendanceRepository;
         private readonly SaturdayWithoutClassService _saturdayWithoutClassService;
 
-        public SchoolAttendanceServiceImp(SchoolAttendanceRepository schoolAttendanceRepository, SaturdayWithoutClassService saturdayWithoutClassService)
+        public SchoolAttendanceServiceImp(
+            EnvironmentVariables environmentVariables,
+            SchoolAttendanceRepository schoolAttendanceRepository,
+            SaturdayWithoutClassService saturdayWithoutClassService)
         {
+            _envioronmentVariables = environmentVariables;
             _schoolAttendanceRepository = schoolAttendanceRepository;
             _saturdayWithoutClassService = saturdayWithoutClassService;
         }
@@ -27,7 +32,9 @@ namespace Piba.Services
                 new()
                 {
                     MemberId = memberId,
-                    Dates = await _saturdayWithoutClassService.GetLastThreeClassesDatesAsync()
+                    Dates = await _saturdayWithoutClassService.GetLastThreeClassesDatesAsync(),
+                    MinValidTime = _envioronmentVariables.MinValidTime,
+                    MaxValidTime = _envioronmentVariables.MaxValidTime
                 });
             return count > 0;
         }
@@ -38,7 +45,9 @@ namespace Piba.Services
                 new()
                 {
                     MemberId = memberId,
-                    Dates = await _saturdayWithoutClassService.GetLastThreeClassesDatesAsync()
+                    Dates = await _saturdayWithoutClassService.GetLastThreeClassesDatesAsync(),
+                    MinValidTime = _envioronmentVariables.MinValidTime,
+                    MaxValidTime = _envioronmentVariables.MaxValidTime
                 });
             return count < 3;
         }

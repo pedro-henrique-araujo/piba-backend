@@ -14,9 +14,10 @@ namespace Piba.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<bool> DateHasClassAsync(DateTime date)
+        public async Task<bool> DateWouldHaveClassAsync(DateTime date)
         {
-            return await _dbContext.Set<SaturdayWithoutClass>().AnyAsync(s => s.DateTime.Date == date.Date) == false;
+            return await _dbContext.Set<SaturdayWithoutClass>()
+                .AnyAsync(s => s.DateTime.Date == date.Date) == false;
         }
     }
 }
