@@ -99,7 +99,8 @@ namespace Piba.Services.Tests
                     Times.Once);
 
             _emailServiceMock.Verify(r =>
-                r.SendEmailToDeveloper(It.Is<SendEmailDto>(e => e.Subject == "File"), fakeExcelFile),
+                r.SendEmailToDeveloper(It.Is<SendEmailDto>(e => 
+                    e.Subject == $"Atividade de Membros {DateTime.Now.AddMonths(-1):MM/yyyy}.xlsx"), fakeExcelFile),
                 Times.Once);
 
             _statusHistoryRepositoryMock.Verify(r =>
