@@ -57,7 +57,8 @@ namespace Piba.Services
             await CreateForLastMonthIfItDoesNotExistAsync();
             if (await _statusHistoryRepository.IsHistoryOfLastMonthSentAsync()) return;
             var excelFile = await _excelService.GenerateStatusHistoryAsync();
-            _emailService.SendEmailToDeveloper(new() { Subject = "File" }, excelFile);
+            var fileName = $"Atividade de Membros {DateTime.Now.AddMonths(-1):MM/yyyy}.xlsx";
+            _emailService.SendEmailToDeveloper(new() { Subject = fileName, FileName = fileName }, excelFile);
             await _statusHistoryRepository.MarkLastMonthHistoryAsSentAsync();
         }
     }

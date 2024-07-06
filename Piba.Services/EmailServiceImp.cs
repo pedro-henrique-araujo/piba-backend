@@ -37,7 +37,7 @@ namespace Piba.Services
 
             using var memoryStream = new MemoryStream(attachment);
 
-            email.Attachments.Add(new (memoryStream, "file.xlsx"));
+            email.Attachments.Add(new (memoryStream, dto.FileName));
 
             _smtpClientWrapper.Send(email);
         }
