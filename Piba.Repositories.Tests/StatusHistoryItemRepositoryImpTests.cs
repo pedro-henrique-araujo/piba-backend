@@ -15,8 +15,7 @@ namespace Piba.Repositories.Tests
         {
             _pibaDbContext = Common.GenerateInMemoryDatabase(nameof(StatusHistoryItemRepositoryImpTests));
             _statusHistoryItemRepository = new StatusHistoryItemRepositoryImp(
-                _pibaDbContext, 
-                new SchoolAttendanceRepositoryImp(_pibaDbContext));
+                _pibaDbContext);
 
             var utcNow = DateTime.UtcNow;
             _baseDate = new DateTime(utcNow.Year, utcNow.Month, 1, 18, 0, 0);
