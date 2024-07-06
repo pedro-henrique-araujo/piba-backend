@@ -38,27 +38,13 @@ namespace Piba.Repositories
         {
             var aMonthAgo = DateTime.UtcNow.AddMonths(-1);
             return await _dbContext.Set<SchoolAttendance>()
+                .Include(a => a.Member)
                 .Where(a =>
                     a.CreatedDate.Value.Month == aMonthAgo.Month
                     && a.CreatedDate.Value.Year == aMonthAgo.Year
+                    && a.IsPresent == false
                     )
                 .ToListAsync();
-        }
-
-        public IQueryable<SchoolAttendance> GetLastMonthsSchoolAttendanceQueryable(ValidTimeFilter filter)
-        {
-            var aMonthAgo = DateTime.UtcNow.AddMonths(-1);
-            var queryable = _dbContext.Set<SchoolAttendance>()
-                .Where(a =>
-                    a.CreatedDate.Value.Month == aMonthAgo.Month
-                    && a.CreatedDate.Value.Year == aMonthAgo.Year
-                    && (a.IsPresent == false
-                       || a.CreatedDate.Value.TimeOfDay >= filter.MinValidTime
-                       && a.CreatedDate.Value.TimeOfDay <= filter.MaxValidTime
-                       )
-                 );
-
-            return queryable;
         }
     }
 }

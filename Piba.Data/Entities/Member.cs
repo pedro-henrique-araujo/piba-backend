@@ -9,5 +9,6 @@ namespace Piba.Data.Entities
         public string? RecurrentExcuse { get; set; }
         public MemberStatus Status { get; set; }
         public DateTime LastStatusUpdate {  get; set; }
+        public ICollection<SchoolAttendance> SchoolAttendances { get; set; }
     }
 }

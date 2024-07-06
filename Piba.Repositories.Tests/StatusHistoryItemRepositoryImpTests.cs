@@ -23,7 +23,7 @@ namespace Piba.Repositories.Tests
         }
 
         [Fact]
-        public async Task CreateAsync_ShouldCreateStatusHistoryItems()
+        public async Task CreateAsync_WhenCalled_ShouldCreateStatusHistoryItems()
         {
             var member = new Member { Name = "A", Status = MemberStatus.Active };
             var history = new StatusHistory { Month = _baseDate.Month, Year = _baseDate.Year };

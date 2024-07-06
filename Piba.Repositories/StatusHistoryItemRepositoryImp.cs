@@ -29,33 +29,23 @@ namespace Piba.Repositories
         public async Task<List<StatusHistoryReportDto>> GetLastHistoryAsync(ValidTimeFilter filter)
         {
             var aMonthAgo = DateTime.UtcNow.AddMonths(-1);
-            var lastMonthSchoolAttendance = _schoolAttendanceRepository
-                .GetLastMonthsSchoolAttendanceQueryable(filter);
-
             var set = _pibaDbContext.Set<StatusHistoryItem>();
-            return await set
-                .Where(i =>
+            return await set.Where(i =>
                         i.StatusHistory.Month == aMonthAgo.Month
                         && i.StatusHistory.Year == aMonthAgo.Year
                     )
-                .Join(
-                    lastMonthSchoolAttendance,
-                    i => i.MemberId,
-                    a => a.MemberId,
-                    (item, atendance) => new
+                .Select(i => new StatusHistoryReportDto
                     {
-                        item.Member,
-                        item.Status,
-                        Attendance = atendance
-
+                        Name = i.Member.Name,
+                        Status = i.Status,
+                        Count = i.Member.SchoolAttendances.Count(a => 
+                            a.CreatedDate.Value.Month == aMonthAgo.Month 
+                            && a.CreatedDate.Value.Year == aMonthAgo.Year
+                             && (a.IsPresent == false
+                                   || a.CreatedDate.Value.TimeOfDay >= filter.MinValidTime
+                                   && a.CreatedDate.Value.TimeOfDay <= filter.MaxValidTime
+                               ))
                     })
-                .GroupBy(i => i.Member)
-                .Select(g => new StatusHistoryReportDto
-                {
-                    Name = g.Key.Name,
-                    Status = g.First().Status,
-                    Count = g.Count(),
-                })
                 .OrderBy(i => i.Name)
                 .ToListAsync();
         }

@@ -37,7 +37,7 @@ namespace Piba.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Logs");
+                    b.ToTable("Logs", (string)null);
                 });
 
             modelBuilder.Entity("Piba.Data.Entities.Member", b =>
@@ -61,7 +61,7 @@ namespace Piba.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members");
+                    b.ToTable("Members", (string)null);
                 });
 
             modelBuilder.Entity("Piba.Data.Entities.SaturdayWithoutClass", b =>
@@ -79,7 +79,7 @@ namespace Piba.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SaturdayWithoutClasses");
+                    b.ToTable("SaturdayWithoutClasses", (string)null);
                 });
 
             modelBuilder.Entity("Piba.Data.Entities.SchoolAttendance", b =>
@@ -110,7 +110,7 @@ namespace Piba.Data.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("SchoolAttendances");
+                    b.ToTable("SchoolAttendances", (string)null);
                 });
 
             modelBuilder.Entity("Piba.Data.Entities.StatusHistory", b =>
@@ -130,7 +130,7 @@ namespace Piba.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StatusHistories");
+                    b.ToTable("StatusHistories", (string)null);
                 });
 
             modelBuilder.Entity("Piba.Data.Entities.StatusHistoryItem", b =>
@@ -154,7 +154,7 @@ namespace Piba.Data.Migrations
 
                     b.HasIndex("StatusHistoryId");
 
-                    b.ToTable("StatusHistoryItems");
+                    b.ToTable("StatusHistoryItems", (string)null);
                 });
 
             modelBuilder.Entity("Piba.Data.Entities.SchoolAttendance", b =>
