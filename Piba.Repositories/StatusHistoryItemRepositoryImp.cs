@@ -9,12 +9,10 @@ namespace Piba.Repositories
     public class StatusHistoryItemRepositoryImp : StatusHistoryItemRepository
     {
         private readonly PibaDbContext _pibaDbContext;
-        private readonly SchoolAttendanceRepository _schoolAttendanceRepository;
 
-        public StatusHistoryItemRepositoryImp(PibaDbContext pibaDbContext, SchoolAttendanceRepository schoolAttendanceRepository)
+        public StatusHistoryItemRepositoryImp(PibaDbContext pibaDbContext)
         {
             _pibaDbContext = pibaDbContext;
-            _schoolAttendanceRepository = schoolAttendanceRepository;
         }
 
         public async Task CreateAsync(IEnumerable<StatusHistoryItem> items)
