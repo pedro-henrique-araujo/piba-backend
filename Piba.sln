@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piba.Services.Tests", "Piba
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piba.Data.Tests", "Piba.Data.Tests\Piba.Data.Tests.csproj", "{74995C04-C1F9-46ED-9DDD-67D1E78C7B0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piba.Function", "Piba.Function\Piba.Function.csproj", "{9669AAB3-F3A5-41C7-A80B-D4A7BDF768AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piba.Function", "Piba.Function\Piba.Function.csproj", "{9669AAB3-F3A5-41C7-A80B-D4A7BDF768AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piba.Repositories.Tests", "Piba.Repositories.Tests\Piba.Repositories.Tests.csproj", "{9F43C931-B8A5-44FE-82B8-95EF8AA3A516}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{9669AAB3-F3A5-41C7-A80B-D4A7BDF768AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9669AAB3-F3A5-41C7-A80B-D4A7BDF768AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9669AAB3-F3A5-41C7-A80B-D4A7BDF768AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F43C931-B8A5-44FE-82B8-95EF8AA3A516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F43C931-B8A5-44FE-82B8-95EF8AA3A516}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F43C931-B8A5-44FE-82B8-95EF8AA3A516}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F43C931-B8A5-44FE-82B8-95EF8AA3A516}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

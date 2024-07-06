@@ -9,11 +9,16 @@ namespace Piba.Services
     {
         private readonly MemberRepository _memberRepository;
         private readonly SchoolAttendanceService _schoolAttendanceService;
+        private readonly StatusHistoryService _memberStatusHistoryService;
 
-        public MemberServiceImp(MemberRepository memberRepository, SchoolAttendanceService schoolAttendanceService)
+        public MemberServiceImp(
+            MemberRepository memberRepository, 
+            SchoolAttendanceService schoolAttendanceService, 
+            StatusHistoryService memberStatusHistoryService)
         {
             _memberRepository = memberRepository;
             _schoolAttendanceService = schoolAttendanceService;
+            _memberStatusHistoryService = memberStatusHistoryService;
         }
 
         public async Task<List<MemberOptionDto>> GetOptionsAsync()
@@ -25,6 +30,7 @@ namespace Piba.Services
 
         public async Task ReviewMembersActivityAsync()
         {
+            await _memberStatusHistoryService.CreateForLastMonthIfItDoesNotExistAsync();
             await CheckStatusChangeFromActiveToInactiveAsync();
             await CheckStatusChangeFromInactiveToActiveAsync();
             await _memberRepository.SaveChangesAsync();
@@ -32,12 +38,13 @@ namespace Piba.Services
 
         private async Task CheckStatusChangeFromActiveToInactiveAsync()
         {
-            var members = await _memberRepository.GetAllActiveAsync();
+            var members = await _memberRepository.GetAllActiveCreatedBefore21DaysAgoAsync();
             foreach (var member in members)
             {
                 if (await _schoolAttendanceService.MemberIsPresentAtLeastOnceOnLastThreeClassesAsync(member.Id)) continue;
 
                 member.Status = MemberStatus.Inactive;
+                member.LastStatusUpdate = DateTime.UtcNow;
             }
         }
 
@@ -49,6 +56,7 @@ namespace Piba.Services
                 if (await _schoolAttendanceService.MemberMissedAnyOfLastThreeClassesAsync(member.Id)) continue;
 
                 member.Status = MemberStatus.Active;
+                member.LastStatusUpdate = DateTime.UtcNow;
             }
         }
     }

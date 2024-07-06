@@ -37,7 +37,7 @@ namespace Piba.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Logs");
+                    b.ToTable("Logs", (string)null);
                 });
 
             modelBuilder.Entity("Piba.Data.Entities.Member", b =>
@@ -45,6 +45,9 @@ namespace Piba.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("LastStatusUpdate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -58,7 +61,7 @@ namespace Piba.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members");
+                    b.ToTable("Members", (string)null);
                 });
 
             modelBuilder.Entity("Piba.Data.Entities.SaturdayWithoutClass", b =>
@@ -76,7 +79,7 @@ namespace Piba.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SaturdayWithoutClasses");
+                    b.ToTable("SaturdayWithoutClasses", (string)null);
                 });
 
             modelBuilder.Entity("Piba.Data.Entities.SchoolAttendance", b =>
@@ -105,7 +108,83 @@ namespace Piba.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SchoolAttendances");
+                    b.HasIndex("MemberId");
+
+                    b.ToTable("SchoolAttendances", (string)null);
+                });
+
+            modelBuilder.Entity("Piba.Data.Entities.StatusHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsSent")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StatusHistories", (string)null);
+                });
+
+            modelBuilder.Entity("Piba.Data.Entities.StatusHistoryItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("StatusHistoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MemberId");
+
+                    b.HasIndex("StatusHistoryId");
+
+                    b.ToTable("StatusHistoryItems", (string)null);
+                });
+
+            modelBuilder.Entity("Piba.Data.Entities.SchoolAttendance", b =>
+                {
+                    b.HasOne("Piba.Data.Entities.Member", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+                });
+
+            modelBuilder.Entity("Piba.Data.Entities.StatusHistoryItem", b =>
+                {
+                    b.HasOne("Piba.Data.Entities.Member", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Piba.Data.Entities.StatusHistory", "StatusHistory")
+                        .WithMany()
+                        .HasForeignKey("StatusHistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("StatusHistory");
                 });
 #pragma warning restore 612, 618
         }

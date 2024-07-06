@@ -16,7 +16,6 @@ namespace Piba.Repositories
             _dbContext = dbContext;
         }
 
-
         public async Task<List<MemberOptionDto>> GetAllInactiveAndActiveOptionsAsync()
         {
             return await _dbContext.Set<Member>()
@@ -25,10 +24,11 @@ namespace Piba.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<Member>> GetAllActiveAsync()
+        public async Task<List<Member>> GetAllActiveCreatedBefore21DaysAgoAsync()
         {
             return await _dbContext.Set<Member>()
-                .Where(m => m.Status == MemberStatus.Active)
+                .Where(m => m.Status == MemberStatus.Active 
+                        && m.LastStatusUpdate < DateTime.Today.AddDays(-21))
                 .ToListAsync();
         }
 
@@ -42,6 +42,20 @@ namespace Piba.Repositories
         public async Task SaveChangesAsync()
         {
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Member>> GetAllInactiveAndActiveAsync()
+        {
+            return await _dbContext.Set<Member>()
+                 .Where(m => new[] { MemberStatus.Inactive, MemberStatus.Active }.Contains(m.Status))
+                 .ToListAsync();
+        }
+
+        public async Task<List<Member>> GetAllAlwaysExcusedAsync()
+        {
+            return await _dbContext.Set<Member>()
+                .Where(m => m.Status == MemberStatus.AlwaysExcused)
+                .ToListAsync();
         }
     }
 }
