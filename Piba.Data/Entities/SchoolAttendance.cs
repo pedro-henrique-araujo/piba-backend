@@ -4,7 +4,7 @@
     {
         public Guid Id { get; private set; }
         public Guid MemberId { get; set; }
-        public Member Member { get; set; }
+        public Member? Member { get; set; }
         public bool IsPresent { get; set; }
         public string? Excuse { get; set; }
         public double? Latitude { get; set; }
