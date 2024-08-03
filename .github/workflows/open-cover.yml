@@ -1,0 +1,39 @@
+name: Open Cover
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Download OpenCover
+        run: Invoke-WebRequest -Uri "https://github.com/OpenCover/opencover/releases/download/4.7.1221/opencover.4.7.1221.zip" -OutFile "opencover.zip"
+      - name: Extract OpenCover
+        run: Expand-Archive -Path "opencover.zip" -DestinationPath "opencover"
+      - name: Run tests with OpenCover
+        run: .\opencover\OpenCover.Console.exe -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"test YourTestProject.csproj" -output:coverage.xml
+      - name: Download ReportGenerator
+        run: Invoke-WebRequest -Uri "https://github.com/danielpalme/ReportGenerator/releases/download/v4.8.12/ReportGenerator_4.8.12.zip" -OutFile "reportgenerator.zip"
+      - name: Extract ReportGenerator
+        run: Expand-Archive -Path "reportgenerator.zip" -DestinationPath "reportgenerator"
+      - name: Generate HTML report
+        run: .\reportgenerator\ReportGenerator.exe -reports:coverage.xml -targetdir:CoverageReport -reporttypes:Html
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: CoverageReport
