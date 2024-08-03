@@ -33,7 +33,7 @@ namespace Piba.Services.Tests
             _baseDate = DateTime.UtcNow;
         }
 
-        [Fact(Skip = "Review test cases")]
+        [Fact]
         public async Task GenerateStatusHistoryAsync_WhenCalled_GenerateCorrectly()
         {
             SetupGetLastHistory();
