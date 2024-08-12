@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piba.Data.Tests", "Piba.Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piba.Function", "Piba.Function\Piba.Function.csproj", "{9669AAB3-F3A5-41C7-A80B-D4A7BDF768AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piba.Repositories.Tests", "Piba.Repositories.Tests\Piba.Repositories.Tests.csproj", "{9F43C931-B8A5-44FE-82B8-95EF8AA3A516}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Piba.Repositories.Tests", "Piba.Repositories.Tests\Piba.Repositories.Tests.csproj", "{9F43C931-B8A5-44FE-82B8-95EF8AA3A516}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
