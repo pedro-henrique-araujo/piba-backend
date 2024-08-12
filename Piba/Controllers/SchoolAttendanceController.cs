@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Piba.Data.Entities;
 using Piba.Services.Interfaces;
 
@@ -15,6 +16,7 @@ namespace Piba.Controllers
             _schoolAttendanceService = schoolAttendanceService;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Create(SchoolAttendance schoolAttendance)
         {
