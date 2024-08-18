@@ -4,6 +4,6 @@ namespace Piba.Services.Interfaces
 {
     public interface GoogleLoginService
     {
-        Task<string> LoginAsync([FromHeader] string authorization);
+        Task<string> LoginAsync(string googleIdentityToken);
     }
 }

@@ -14,6 +14,8 @@ namespace Piba.Repositories
             services.AddScoped<StatusHistoryItemRepository, StatusHistoryItemRepositoryImp>();
             services.AddScoped<StatusHistoryRepository, StatusHistoryRepositoryImp>();
             services.AddScoped<UserRepository, UserRepositoryImp>();
+            services.AddScoped<AuthenticationRepository, AuthenticationRepositoryImp>();
+            services.AddScoped<AuthorizationRepository, AuthorizationRepositoryImp>();
         }
     }
 }
