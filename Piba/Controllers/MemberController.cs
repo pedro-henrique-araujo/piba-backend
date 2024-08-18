@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Piba.Services.Interfaces;
 
 namespace Piba.Controllers
@@ -14,6 +15,7 @@ namespace Piba.Controllers
             _memberService = memberService;
         }
 
+        [AllowAnonymous]
         [HttpOptions]
         public async Task<IActionResult> GetMemberOptions()
         {
