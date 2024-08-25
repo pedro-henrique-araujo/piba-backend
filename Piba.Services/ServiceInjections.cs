@@ -20,6 +20,8 @@ namespace Piba.Services
             services.AddScoped<GoogleLoginService, GoogleLoginServiceImp>();
             services.AddScoped<GoogleWebSignatureService, GoogleWebSignatureServiceImp>();
             services.AddScoped<JwtService, JwtServiceImp>();
+            services.AddScoped<SessionAttendanceService, SessionAttendanceServiceImp>();
+            services.AddScoped<SessionAttendanceItemService, SessionAttendanceItemServiceImp>();
         }
     }
 }
