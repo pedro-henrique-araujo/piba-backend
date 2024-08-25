@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Piba.Data;
 
@@ -11,9 +12,11 @@ using Piba.Data;
 namespace Piba.Data.Migrations
 {
     [DbContext(typeof(PibaDbContext))]
-    partial class PibaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240825145529_CreateTableSessionAttendances")]
+    partial class CreateTableSessionAttendances
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -325,30 +328,6 @@ namespace Piba.Data.Migrations
                     b.ToTable("SessionAttendances");
                 });
 
-            modelBuilder.Entity("Piba.Data.Entities.SessionAttendanceItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsPresent")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("MemberId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("SessionAttendanceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MemberId");
-
-                    b.HasIndex("SessionAttendanceId");
-
-                    b.ToTable("SessionAttendanceItems");
-                });
-
             modelBuilder.Entity("Piba.Data.Entities.StatusHistory", b =>
                 {
                     b.Property<Guid>("Id")
@@ -453,25 +432,6 @@ namespace Piba.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Member");
-                });
-
-            modelBuilder.Entity("Piba.Data.Entities.SessionAttendanceItem", b =>
-                {
-                    b.HasOne("Piba.Data.Entities.Member", "Member")
-                        .WithMany()
-                        .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Piba.Data.Entities.SessionAttendance", "SessionAttendance")
-                        .WithMany()
-                        .HasForeignKey("SessionAttendanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Member");
-
-                    b.Navigation("SessionAttendance");
                 });
 
             modelBuilder.Entity("Piba.Data.Entities.StatusHistoryItem", b =>

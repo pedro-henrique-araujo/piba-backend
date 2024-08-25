@@ -16,6 +16,8 @@ namespace Piba.Repositories
             services.AddScoped<UserRepository, UserRepositoryImp>();
             services.AddScoped<AuthenticationRepository, AuthenticationRepositoryImp>();
             services.AddScoped<AuthorizationRepository, AuthorizationRepositoryImp>();
+            services.AddScoped<SessionAttendanceRepository, SessionAttendanceRepositoryImp>();
+            services.AddScoped<SessionAttendanceItemRepository, SessionAttendanceItemRepositoryImp>();
         }
     }
 }
