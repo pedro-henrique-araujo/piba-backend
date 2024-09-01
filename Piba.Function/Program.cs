@@ -8,6 +8,7 @@ using Piba.Repositories;
 using Piba.Repositories.Interfaces;
 using Piba.Services;
 using Piba.Services.Interfaces;
+using System.Security.Cryptography.Xml;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
@@ -33,6 +34,7 @@ var host = new HostBuilder()
         services.AddScoped<StatusHistoryItemRepository, StatusHistoryItemRepositoryImp>();
         services.AddScoped<StatusHistoryRepository, StatusHistoryRepositoryImp>();
 
+        services.AddSingleton(p => new Semaphore(1, 1));
 
         services.AddDbContext<PibaDbContext>(options =>
         {

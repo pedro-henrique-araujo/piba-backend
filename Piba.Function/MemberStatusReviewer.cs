@@ -9,20 +9,23 @@ namespace Piba.Function
         private readonly LogService _logService;
         private readonly MemberService _memberService;
         private readonly EmailService _emailService;
+        private readonly Semaphore _semaphore;
 
         public MemberStatusReviewer(
             LogService logService, 
             MemberService memberService,
-            EmailService emailService)
+            EmailService emailService,
+            Semaphore semaphore)
         {
             _logService = logService;
             _memberService = memberService;
             _emailService = emailService;
+            _semaphore = semaphore;
         }
 
         [Function(nameof(ReviewMembersActivityTimerTriggerAsync))]
         public async Task ReviewMembersActivityTimerTriggerAsync(
-            [TimerTrigger("0 0 0 * * *", RunOnStartup = false)] TimerInfo timerInfo)
+            [TimerTrigger("0 0 0 * * *", RunOnStartup = true)] TimerInfo timerInfo)
         {
             await ReviewMembersActivityAsync();
         }
@@ -36,8 +39,10 @@ namespace Piba.Function
 
         public async Task ReviewMembersActivityAsync()
         {
+            _semaphore.WaitOne();
             await _memberService.ReviewMembersActivityAsync();
             await FinalNotificationsAsync();
+            _semaphore.Release();
         }
 
         private async Task FinalNotificationsAsync()
