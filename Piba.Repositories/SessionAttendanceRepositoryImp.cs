@@ -25,6 +25,7 @@ namespace Piba.Repositories
         {
             var record = await _dbContext.Set<SessionAttendance>().FindAsync(id);
             _dbContext.Entry(record).State = EntityState.Deleted;
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<SessionAttendance> GetByIdAsync(Guid id)
