@@ -52,5 +52,12 @@ namespace Piba.Repositories
 
             return records;
         }
+
+        public async Task UpdateAsync(SessionAttendance attendance)
+        {
+            _dbContext.Entry(attendance).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync();
+            _dbContext.Entry(attendance).State = EntityState.Detached;
+        }
     }
 }

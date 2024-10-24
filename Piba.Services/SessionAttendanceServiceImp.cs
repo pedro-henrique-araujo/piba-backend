@@ -19,7 +19,7 @@ namespace Piba.Services
         public async Task CreateAsync(SessionAttendanceDto sessionAttendanceDto)
         {
             var attendance = new SessionAttendance();
-            attendance.DateTime = DateTime.Now;
+            attendance.DateTime = sessionAttendanceDto.DateTime ?? DateTime.Now;
             await _sessionAttendanceRepository.CreateAsync(attendance);
             await _sessionAttendanceItemService.CreateRangeAsync(attendance.Id, sessionAttendanceDto.Items);
         }
@@ -54,6 +54,13 @@ namespace Piba.Services
 
         public async Task UpdateAsync(SessionAttendanceUpdateDto sessionAttendanceUpdateDto)
         {
+            if (sessionAttendanceUpdateDto.DateTime is not null)
+            {
+                var attendance = await _sessionAttendanceRepository.GetByIdAsync(sessionAttendanceUpdateDto.Id);
+
+                attendance.DateTime = sessionAttendanceUpdateDto.DateTime.Value;
+                await _sessionAttendanceRepository.UpdateAsync(attendance);
+            }
             await _sessionAttendanceItemService.UpdateRangeAsync(sessionAttendanceUpdateDto.Id, sessionAttendanceUpdateDto.Items);
         }
     }
