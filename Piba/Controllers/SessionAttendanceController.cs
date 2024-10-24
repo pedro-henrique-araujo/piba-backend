@@ -19,7 +19,7 @@ namespace Piba.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> PaginateAsync([FromRoute] PaginationQueryParameters paginationQueryParameters)
+        public async Task<IActionResult> PaginateAsync([FromQuery] PaginationQueryParameters paginationQueryParameters)
         {
             var output = await _sessionAttendanceService.PaginateAsync(paginationQueryParameters);
             return Ok(output);
