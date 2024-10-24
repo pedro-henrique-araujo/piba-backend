@@ -10,5 +10,6 @@ namespace Piba.Repositories.Interfaces
         Task<SessionAttendance> GetByIdAsync(Guid id);
         Task<int> GetTotalAsync();
         Task<List<SessionAttendance>> PaginateAsync(PaginationQueryParameters paginationQueryParameters);
+        Task UpdateAsync(SessionAttendance attendance);
     }
 }
