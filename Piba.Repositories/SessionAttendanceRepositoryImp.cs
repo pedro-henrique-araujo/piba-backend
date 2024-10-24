@@ -48,6 +48,7 @@ namespace Piba.Repositories
             var records = await _dbContext.Set<SessionAttendance>()
                     .Skip(paginationQueryParameters.Skip)
                     .Take(paginationQueryParameters.Take)
+                    .OrderByDescending(s => s.DateTime)
                 .ToListAsync();
 
             return records;
