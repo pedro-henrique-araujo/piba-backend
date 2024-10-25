@@ -46,10 +46,9 @@ namespace Piba.Repositories
         public async Task<List<SessionAttendance>> PaginateAsync(PaginationQueryParameters paginationQueryParameters)
         {
             var records = await _dbContext.Set<SessionAttendance>()
-                .OrderByDescending(s => s.DateTime)
+                    .OrderByDescending(s => s.DateTime)
                     .Skip(paginationQueryParameters.Skip)
-                    .Take(paginationQueryParameters.Take)
-                    
+                    .Take(paginationQueryParameters.Take)                    
                 .ToListAsync();
 
             return records;
