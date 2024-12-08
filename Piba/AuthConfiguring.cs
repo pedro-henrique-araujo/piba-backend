@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Piba.Data;
+using Piba.Data.Entities;
 using System.Text;
 
 namespace Piba
@@ -58,7 +59,7 @@ namespace Piba
 
         private void AddIdentity()
         {
-            _services.AddIdentity<IdentityUser, IdentityRole>()
+            _services.AddIdentity<PibaUser, IdentityRole>()
               .AddEntityFrameworkStores<PibaDbContext>()
               .AddDefaultTokenProviders();
         }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Piba.Data;
 
@@ -11,9 +12,11 @@ using Piba.Data;
 namespace Piba.Data.Migrations
 {
     [DbContext(typeof(PibaDbContext))]
-    partial class PibaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241208145127_AlterTableAddNameAndPhotoUrlToUser")]
+    partial class AlterTableAddNameAndPhotoUrlToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -191,26 +194,6 @@ namespace Piba.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Logs");
-                });
-
-            modelBuilder.Entity("Piba.Data.Entities.MediaAvailability", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("MediaAvailabilities");
                 });
 
             modelBuilder.Entity("Piba.Data.Entities.Member", b =>
@@ -491,17 +474,6 @@ namespace Piba.Data.Migrations
                 });
 
             modelBuilder.Entity("Piba.Data.Entities.CanteAvailability", b =>
-                {
-                    b.HasOne("Piba.Data.Entities.PibaUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Piba.Data.Entities.MediaAvailability", b =>
                 {
                     b.HasOne("Piba.Data.Entities.PibaUser", "User")
                         .WithMany()
