@@ -5,10 +5,12 @@ using Piba.Data.Entities;
 
 namespace Piba.Data
 {
-    public class PibaDbContext : IdentityDbContext
+    public class PibaDbContext : IdentityDbContext<PibaUser>
     {
         public PibaDbContext(DbContextOptions<PibaDbContext> options) : base(options) { }
 
+        public DbSet<CanteAvailability> CanteAvailabilites { get; set; }
+        public DbSet<MediaAvailability> MediaAvailabilities { get; set; }
         public DbSet<Member> Members { get; set; }
         public DbSet<SessionAttendance> SessionAttendances { get; set; }
         public DbSet<SessionAttendanceItem> SessionAttendanceItems { get; set; }
@@ -22,7 +24,7 @@ namespace Piba.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<IdentityUser>(entity =>
+            builder.Entity<PibaUser>(entity =>
             {
                 entity.ToTable(name: "Users");
             });

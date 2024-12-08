@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Piba.Data.Entities;
 using Piba.Repositories;
 using Piba.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,14 +21,14 @@ namespace Piba.Services
             _authorizationRepository = authorizationRepository;
         }
 
-        public async Task<string> GenerateUserTokenAsync(IdentityUser user)
+        public async Task<string> GenerateUserTokenAsync(PibaUser user)
         {
             var securityToken = await GenerateJwtSecurityTokenAsync(user);
 
             return EncodeAsString(securityToken);
         }
 
-        private async Task<JwtSecurityToken> GenerateJwtSecurityTokenAsync(IdentityUser user)
+        private async Task<JwtSecurityToken> GenerateJwtSecurityTokenAsync(PibaUser user)
         {
             var claims = await GenerateClaimsAsync(user);
 
@@ -47,7 +48,7 @@ namespace Piba.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private async Task<List<Claim>> GenerateClaimsAsync(IdentityUser user)
+        private async Task<List<Claim>> GenerateClaimsAsync(PibaUser user)
         {
             var claims = new List<Claim>
             {

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Piba.Data;
 using Piba.Data.Dto;
+using Piba.Data.Entities;
 using Piba.Repositories.Interfaces;
 
 namespace Piba.Repositories
@@ -17,7 +18,7 @@ namespace Piba.Repositories
 
         public async Task<List<UserOptionDto>> GetUserOptionsAsync()
         {
-            var options = await _dbContext.Set<IdentityUser>()
+            var options = await _dbContext.Set<PibaUser>()
                 .Select(u => new UserOptionDto
                 {
                     Id = u.Id,
