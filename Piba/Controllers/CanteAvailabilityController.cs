@@ -10,6 +10,7 @@ using System.Security.Claims;
 namespace Piba.Controllers
 {
     [Route("cante-availability")]
+    [Authorize(Roles = "cante")]
     [ApiController]
     public class CanteAvailabilityController : ControllerBase
     {
