@@ -10,6 +10,7 @@ using System.Security.Claims;
 namespace Piba.Controllers
 {
     [Route("media-availability")]
+    [Authorize(Roles = "media")]
     [ApiController]
     public class MediaAvailabilityController : ControllerBase
     {
