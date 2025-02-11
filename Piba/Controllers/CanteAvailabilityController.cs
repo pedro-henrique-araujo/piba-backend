@@ -51,11 +51,38 @@ namespace Piba.Controllers
             return Ok(list);
         }
 
+        [HttpGet("mine")]
+        public async Task<IActionResult> GetMine([FromQuery] DateRangeWithEmailDto dateRangeWithEmail)
+        {
+            var availabilitiesQueryable = _dbContext.CanteAvailabilites.AsQueryable();
+
+            if (dateRangeWithEmail.Start.HasValue)
+            {
+                availabilitiesQueryable = availabilitiesQueryable.Where(a => a.Date.Date >= dateRangeWithEmail.Start.Value.Date);
+            }
+
+            if (dateRangeWithEmail.End.HasValue)
+            {
+                availabilitiesQueryable = availabilitiesQueryable.Where(a => a.Date.Date <= dateRangeWithEmail.End.Value.Date);
+            }
+
+            var userEmail = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userInDb = await _userManager.FindByEmailAsync(userEmail);
+            availabilitiesQueryable = availabilitiesQueryable.Where(a => a.UserId == userInDb.Id);
+           
+
+            availabilitiesQueryable = availabilitiesQueryable.Include(a => a.User);
+
+            var list = await availabilitiesQueryable.Select(a => new CanteAvailabilityDto(a)).ToListAsync();
+
+            return Ok(list);
+        }
+
         [HttpPatch]
         public async Task<IActionResult> UpdateUserAvailabilities(CanteAvailabilitiesDto userAvailability)
         {
-            var a = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var userInDb = await _userManager.FindByEmailAsync(a);
+            var userEmail = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userInDb = await _userManager.FindByEmailAsync(userEmail);
 
             var availabilityInDb = await _dbContext.CanteAvailabilites
                 .Where(a => a.Date.Date >= userAvailability.DateRange.Start.Date
