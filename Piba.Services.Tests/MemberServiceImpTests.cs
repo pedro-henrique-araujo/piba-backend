@@ -30,7 +30,7 @@ namespace Piba.Services.Tests
         {
             var mockedMembers = GetMockedMembers();
 
-            _repositoryMock.Setup(r => r.GetAllInactiveAndActiveOptionsAsync())
+            _repositoryMock.Setup(r => r.GetAllOptionsAsync())
                 .ReturnsAsync(mockedMembers);
 
             var memberOptions = await _memberService.GetOptionsAsync();

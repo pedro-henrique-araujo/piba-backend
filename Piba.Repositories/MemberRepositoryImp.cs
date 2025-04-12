@@ -35,7 +35,7 @@ namespace Piba.Repositories
         public async Task<List<Member>> GetAllActiveCreatedBefore21DaysAgoAsync()
         {
             return await _dbContext.Set<Member>()
-                .Where(m => m.Status == MemberStatus.Active 
+                .Where(m => m.Status == MemberStatus.Active
                         && m.LastStatusUpdate < DateTime.Today.AddDays(-21))
                 .ToListAsync();
         }
