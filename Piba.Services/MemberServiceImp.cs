@@ -23,7 +23,7 @@ namespace Piba.Services
 
         public async Task<List<MemberOptionDto>> GetOptionsAsync()
         {
-            var options = await _memberRepository.GetAllInactiveAndActiveOptionsAsync();
+            var options = await _memberRepository.GetAllOptionsAsync();
 
             return options;
         }
