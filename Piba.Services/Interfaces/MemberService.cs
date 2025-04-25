@@ -1,4 +1,5 @@
 ﻿using Piba.Data.Dto;
+using Piba.Data.Entities;
 
 namespace Piba.Services.Interfaces
 {
@@ -6,5 +7,7 @@ namespace Piba.Services.Interfaces
     {
         Task<List<MemberOptionDto>> GetOptionsAsync();
         Task ReviewMembersActivityAsync();
+
+        Task<RecordsPage<Member>> PaginateAsync(PaginationQueryParameters paginationQueryParameters);
     }
 }

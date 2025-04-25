@@ -18,6 +18,7 @@ namespace Piba.Data
         public DbSet<SaturdayWithoutClass> SaturdayWithoutClasses { get; set; }
         public DbSet<StatusHistory> StatusHistories { get; set; }
         public DbSet<StatusHistoryItem> StatusHistoryItems { get; set; }
+        public DbSet<Song> Songs { get; set; }
         public DbSet<Log> Logs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

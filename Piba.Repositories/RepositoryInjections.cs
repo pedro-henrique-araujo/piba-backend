@@ -18,6 +18,8 @@ namespace Piba.Repositories
             services.AddScoped<AuthorizationRepository, AuthorizationRepositoryImp>();
             services.AddScoped<SessionAttendanceRepository, SessionAttendanceRepositoryImp>();
             services.AddScoped<SessionAttendanceItemRepository, SessionAttendanceItemRepositoryImp>();
+            services.AddScoped<SongRepository, SongRepositoryImp>();
+            services.AddScoped<RoleRepository, RoleRepositoryImp>();
         }
     }
 }

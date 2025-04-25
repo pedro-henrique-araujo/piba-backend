@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Piba.Data.Dto;
 using Piba.Services.Interfaces;
 
 namespace Piba.Controllers
@@ -13,6 +14,13 @@ namespace Piba.Controllers
         public MemberController(MemberService memberService)
         {
             _memberService = memberService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PaginateAsync([FromQuery] PaginationQueryParameters paginationQueryParameters)
+        {
+            var output = await _memberService.PaginateAsync(paginationQueryParameters);
+            return Ok(output);
         }
 
         [AllowAnonymous]
