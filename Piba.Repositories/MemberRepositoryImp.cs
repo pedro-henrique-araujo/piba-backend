@@ -16,22 +16,6 @@ namespace Piba.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<MemberOptionDto>> GetAllOptionsAsync()
-        {
-            return await _dbContext.Set<Member>()
-                .Where(m => m.Status != MemberStatus.Removed)
-                .Select(m => new MemberOptionDto { Id = m.Id, Name = m.Name })
-                .ToListAsync();
-        }
-
-        public async Task<List<MemberOptionDto>> GetAllInactiveAndActiveOptionsAsync()
-        {
-            return await _dbContext.Set<Member>()
-                .Where(m => new[] { MemberStatus.Inactive, MemberStatus.Active }.Contains(m.Status))
-                .Select(m => new MemberOptionDto { Id = m.Id, Name = m.Name })
-                .ToListAsync();
-        }
-
         public async Task<List<Member>> GetAllActiveCreatedBefore21DaysAgoAsync()
         {
             return await _dbContext.Set<Member>()
@@ -64,6 +48,31 @@ namespace Piba.Repositories
             return await _dbContext.Set<Member>()
                 .Where(m => m.Status == MemberStatus.AlwaysExcused)
                 .ToListAsync();
+        }
+
+        public async Task<List<MemberOptionDto>> GetAllOptionsAsync()
+        {
+
+            return await _dbContext.Set<Member>()
+                .Where(m => m.Status != MemberStatus.Removed)
+                .Select(m => new MemberOptionDto { Id = m.Id, Name = m.Name })
+                .ToListAsync();
+        }
+
+        public async Task<List<Member>> PaginateAsync(PaginationQueryParameters paginationQueryParameters)
+        {
+            var records = await _dbContext.Set<Member>()
+                    .Skip(paginationQueryParameters.Skip)
+                    .Take(paginationQueryParameters.Take)
+                .ToListAsync();
+
+            return records;
+        }
+
+        public async Task<int> GetTotalAsync()
+        {
+            var total = await _dbContext.Set<Member>().CountAsync();
+            return total;
         }
     }
 }

@@ -4,6 +4,11 @@ namespace Piba.Data.Dto
 {
     public class UserDto
     {
+        public UserDto()
+        {
+            
+        }
+
         public UserDto(PibaUser? user)
         {
             Id = user.Id;
@@ -11,8 +16,9 @@ namespace Piba.Data.Dto
             PhotoUrl = user.PhotoUrl;
         }
 
-        public string Id { get; private set; }
-        public string? Name { get; private set; }
-        public string? PhotoUrl { get; private set; }
+        public string? Id { get; set; }
+        public string? Name { get; set; }
+        public string? PhotoUrl { get; set; }
+        public List<string> Roles { get; set; }
     }
 }

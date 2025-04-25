@@ -1,4 +1,5 @@
 ﻿using Piba.Data.Dto;
+using Piba.Data.Entities;
 using Piba.Data.Enums;
 using Piba.Repositories.Interfaces;
 using Piba.Services.Interfaces;
@@ -19,6 +20,14 @@ namespace Piba.Services
             _memberRepository = memberRepository;
             _schoolAttendanceService = schoolAttendanceService;
             _memberStatusHistoryService = memberStatusHistoryService;
+        }
+
+        public async Task<RecordsPage<Member>> PaginateAsync(PaginationQueryParameters paginationQueryParameters)
+        {
+            var page = new RecordsPage<Member>();
+            page.Records = await _memberRepository.PaginateAsync(paginationQueryParameters);
+            page.Total = await _memberRepository.GetTotalAsync();
+            return page;
         }
 
         public async Task<List<MemberOptionDto>> GetOptionsAsync()

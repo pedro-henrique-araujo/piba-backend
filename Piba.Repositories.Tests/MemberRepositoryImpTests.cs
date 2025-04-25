@@ -17,19 +17,21 @@ namespace Piba.Repositories.Tests
         }
 
         [Fact]
-        public async Task GetAllInactiveAndActiveOptionsAsync_WhenCalled_ReturnsAllInactiveAndActiveOptions()
+        public async Task GetAllOptionsAsync_WhenCalled_ReturnsAllOptions()
         {
             var member1 = new Member { Name = "A", Status = MemberStatus.Active };
             var member2 = new Member { Name = "B", Status = MemberStatus.Inactive };
             var member3 = new Member { Name = "C", Status = MemberStatus.AlwaysExcused };
+            var member4 = new Member { Name = "D", Status = MemberStatus.Removed };
             _pibaDbContext.AddRange(member1, member2, member3);
             await _pibaDbContext.SaveChangesAsync();
 
-            var result = await _memberRepository.GetAllInactiveAndActiveOptionsAsync();
+            var result = await _memberRepository.GetAllOptionsAsync();
 
-            Assert.Equal(2, result.Count);
+            Assert.Equal(3, result.Count);
             Assert.Contains(result, m => m.Id == member1.Id && m.Name == member1.Name);
             Assert.Contains(result, m => m.Id == member2.Id && m.Name == member2.Name);
+            Assert.Contains(result, m => m.Id == member3.Id && m.Name == member3.Name);
         }
 
         [Fact]
