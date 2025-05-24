@@ -6,47 +6,44 @@ using Piba.Repositories.Interfaces;
 
 namespace Piba.Repositories
 {
-    public class SessionAttendanceRepositoryImp : SessionAttendanceRepository
+    public class SongRepositoryImp : SongRepository
     {
         private readonly PibaDbContext _dbContext;
 
-        public SessionAttendanceRepositoryImp(PibaDbContext dbContext)
+        public SongRepositoryImp(PibaDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task CreateAsync(SessionAttendance attendance)
+        public async Task CreateAsync(Song song)
         {
-            _dbContext.Entry(attendance).State = EntityState.Added;
+            _dbContext.Entry(song).State = EntityState.Added;
             await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Guid id)
         {
-            var record = await _dbContext.Set<SessionAttendance>().FindAsync(id);
+            var record = await _dbContext.Set<Song>().FindAsync(id);
             _dbContext.Entry(record).State = EntityState.Deleted;
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<SessionAttendance> GetByIdAsync(Guid id)
+        public async Task<Song> GetByIdAsync(Guid id)
         {
-            var record = await _dbContext.Set<SessionAttendance>()
-                .Include(s => s.SessionAttendanceItems)
-                    .ThenInclude(i => i.Member)
+            var record = await _dbContext.Set<Song>()
                 .FirstOrDefaultAsync(s => s.Id == id);
             return record;
         }
 
         public async Task<int> GetTotalAsync()
         {
-            var total = await _dbContext.Set<SessionAttendance>().CountAsync();
+            var total = await _dbContext.Set<Song>().CountAsync();
             return total;
         }
 
-        public async Task<List<SessionAttendance>> PaginateAsync(PaginationQueryParameters paginationQueryParameters)
+        public async Task<List<Song>> PaginateAsync(PaginationQueryParameters paginationQueryParameters)
         {
-            var records = await _dbContext.Set<SessionAttendance>()
-                    .OrderByDescending(s => s.DateTime)
+            var records = await _dbContext.Set<Song>()
                     .Skip(paginationQueryParameters.Skip)
                     .Take(paginationQueryParameters.Take)                    
                 .ToListAsync();
@@ -54,11 +51,11 @@ namespace Piba.Repositories
             return records;
         }
 
-        public async Task UpdateAsync(SessionAttendance attendance)
+        public async Task UpdateAsync(Song song)
         {
-            _dbContext.Entry(attendance).State = EntityState.Modified;
+            _dbContext.Entry(song).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
-            _dbContext.Entry(attendance).State = EntityState.Detached;
+            _dbContext.Entry(song).State = EntityState.Detached;
         }
     }
 }
