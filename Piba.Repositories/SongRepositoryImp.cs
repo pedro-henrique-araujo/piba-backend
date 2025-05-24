@@ -15,10 +15,12 @@ namespace Piba.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task CreateAsync(Song song)
+        public async Task<Song> CreateAsync(Song song)
         {
             _dbContext.Entry(song).State = EntityState.Added;
             await _dbContext.SaveChangesAsync();
+            _dbContext.Entry(song).State = EntityState.Detached;
+            return song;
         }
 
         public async Task DeleteAsync(Guid id)
@@ -31,6 +33,7 @@ namespace Piba.Repositories
         public async Task<Song> GetByIdAsync(Guid id)
         {
             var record = await _dbContext.Set<Song>()
+                .Include(s => s.Links)
                 .FirstOrDefaultAsync(s => s.Id == id);
             return record;
         }

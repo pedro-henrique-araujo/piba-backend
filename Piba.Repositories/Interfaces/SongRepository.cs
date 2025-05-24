@@ -5,7 +5,7 @@ namespace Piba.Repositories.Interfaces
 {
     public interface SongRepository
     {
-        Task CreateAsync(Song song);
+        Task<Song> CreateAsync(Song song);
         Task DeleteAsync(Guid id);
         Task<Song> GetByIdAsync(Guid id);
         Task<int> GetTotalAsync();

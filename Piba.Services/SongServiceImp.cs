@@ -2,16 +2,19 @@
 using Piba.Data.Entities;
 using Piba.Repositories.Interfaces;
 using Piba.Services.Interfaces;
+using Mapster;
 
 namespace Piba.Services
 {
     public class SongServiceImp : SongService
     {
         private readonly SongRepository _songRepository;
+        private readonly LinkService _linkService;
 
-        public SongServiceImp(SongRepository songRepository)
+        public SongServiceImp(SongRepository songRepository, LinkService linkService)
         {
             _songRepository = songRepository;
+            _linkService = linkService;
         }
 
         public async Task<RecordsPage<Song>> PaginateAsync(PaginationQueryParameters paginationQueryParameters)
@@ -22,19 +25,23 @@ namespace Piba.Services
             return page;
         }
 
-        public async Task<Song> GetByIdAsync(Guid id)
+        public async Task<SongDto> GetByIdAsync(Guid id)
         {
-            return await _songRepository.GetByIdAsync(id);
+            var song = await _songRepository.GetByIdAsync(id);
+            return song.Adapt<SongDto>();
         }
 
-        public async Task CreateAsync(Song song)
+        public async Task CreateAsync(SongDto song)
         {
-            await _songRepository.CreateAsync(song);
+            var songCreated = await _songRepository.CreateAsync(song.Adapt<Song>());
+            await _linkService.CreateLinksAsync(songCreated.Id, song.Links);
         }
 
-        public async Task UpdateAsync(Song song)
+        public async Task UpdateAsync(SongDto songDto)
         {
-            await _songRepository.UpdateAsync(song);
+            await _songRepository.UpdateAsync(songDto.Adapt<Song>());
+            await _linkService.UpdateLinksAsync(songDto.Id.Value, songDto.Links);
+
         }
 
         public async Task DeleteAsync(Guid id)

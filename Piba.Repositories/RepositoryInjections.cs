@@ -20,6 +20,7 @@ namespace Piba.Repositories
             services.AddScoped<SessionAttendanceItemRepository, SessionAttendanceItemRepositoryImp>();
             services.AddScoped<SongRepository, SongRepositoryImp>();
             services.AddScoped<RoleRepository, RoleRepositoryImp>();
+            services.AddScoped<LinkRepository, LinkRepositoryImp>();
         }
     }
 }
