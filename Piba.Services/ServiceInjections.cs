@@ -24,6 +24,7 @@ namespace Piba.Services
             services.AddScoped<SessionAttendanceItemService, SessionAttendanceItemServiceImp>();
             services.AddScoped<SongService, SongServiceImp>();
             services.AddScoped<RoleService, RoleServiceImp>();
+            services.AddScoped<LinkService, LinkServiceImp>();
         }
     }
 }

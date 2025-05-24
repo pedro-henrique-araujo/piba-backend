@@ -2,18 +2,21 @@
 using Piba.Data.Dto;
 using Piba.Data.Entities;
 using Piba.Repositories.Interfaces;
+using Piba.Services.Interfaces;
 
 namespace Piba.Services.Tests
 {
     public class SongServiceImpTests
     {
         private readonly Mock<SongRepository> _songRepositoryMock;
+        private readonly Mock<LinkService> _linkServiceMock;
         private readonly SongServiceImp _songServiceImp;
 
         public SongServiceImpTests()
         {
             _songRepositoryMock = new Mock<SongRepository>();
-            _songServiceImp = new SongServiceImp(_songRepositoryMock.Object);
+            _linkServiceMock = new Mock<LinkService>();
+            _songServiceImp = new SongServiceImp(_songRepositoryMock.Object, _linkServiceMock.Object);
         }
 
         [Fact]
@@ -38,7 +41,7 @@ namespace Piba.Services.Tests
         [Fact]
         public async Task GetByIdAsync_WhenCalled_AssertCorrectResult()
         {
-            var song = new Song();
+            var song = new Song { Name = "test" };
             var id = Guid.NewGuid();
 
             _songRepositoryMock.Setup(r => r.GetByIdAsync(id))
@@ -46,25 +49,31 @@ namespace Piba.Services.Tests
 
             var result = await _songServiceImp.GetByIdAsync(id);
 
-            Assert.Equal(song, result);
+            Assert.Equal(song.Name, result.Name);
 
         }
 
         [Fact]
         public async Task CreateAsync_WhenCalled_CreateCorrectly()
         {
-            var song = new Song();
+            var song = new SongDto {   Name = "test", Links = new() };
+            var songCreated = new Song { Id = Guid.NewGuid()};
+            _songRepositoryMock.Setup(r => r.CreateAsync(It.Is<Song>(s => s.Name == "test")))
+                .ReturnsAsync(songCreated);
+
             await _songServiceImp.CreateAsync(song);
 
-            _songRepositoryMock.Verify(r => r.CreateAsync(song));
+            _linkServiceMock.Verify(l => l.CreateLinksAsync(songCreated.Id, song.Links));
+
         }
 
         [Fact]
         public async Task UpdateAsync_WhenCalled_UpdateCorrectly()
         {
-            var song = new Song();
+            var song = new SongDto { Id = Guid.NewGuid(), Name = "test", Links = new() };
             await _songServiceImp.UpdateAsync(song);
-            _songRepositoryMock.Verify(r => r.UpdateAsync(song));
+            _songRepositoryMock.Verify(r => r.UpdateAsync(It.Is<Song>(s => s.Name == "test")));
+            _linkServiceMock.Verify(l => l.UpdateLinksAsync(song.Id.Value, song.Links));
         }
 
         [Fact]

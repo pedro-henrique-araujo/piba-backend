@@ -5,10 +5,10 @@ namespace Piba.Services.Interfaces
 {
     public interface SongService
     {
-        Task CreateAsync(Song song);
+        Task CreateAsync(SongDto song);
         Task DeleteAsync(Guid id);
-        Task<Song> GetByIdAsync(Guid id);
+        Task<SongDto> GetByIdAsync(Guid id);
         Task<RecordsPage<Song>> PaginateAsync(PaginationQueryParameters paginationQueryParameters);
-        Task UpdateAsync(Song song);
+        Task UpdateAsync(SongDto songDto);
     }
 }
