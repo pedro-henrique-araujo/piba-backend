@@ -5,6 +5,6 @@ namespace Piba.Services.Interfaces
     public interface EmailService
     {
         void SendEmailToDeveloper(SendEmailDto dto);
-        void SendEmailToDeveloper(SendEmailDto dto, byte[] attachment);
+        void SendEmailToDeveloper(SendEmailDto dto, params AttachmentDto[] attachments);
     }
 }

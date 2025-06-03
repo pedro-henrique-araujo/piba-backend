@@ -24,6 +24,11 @@ namespace Piba.Repositories
             await _pibaDbContext.SaveChangesAsync();
         }
 
+        public async Task<List<AttendanceReportDto>> GetAttendancesReportAsync(DateOnly date)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<StatusHistoryReportDto>> GetLastHistoryAsync(ValidTimeFilter filter)
         {
             var aMonthAgo = DateTime.UtcNow.AddMonths(-1);

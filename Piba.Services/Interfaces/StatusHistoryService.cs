@@ -4,6 +4,6 @@ namespace Piba.Services.Interfaces
     public interface StatusHistoryService
     {
         Task CreateForLastMonthIfItDoesNotExistAsync();
-        Task SendStatusHistoryEmailToReceiversAsync();
+        Task SendStatusHistoryEmailToReceiversAsync(DateTime date);
     }
 }

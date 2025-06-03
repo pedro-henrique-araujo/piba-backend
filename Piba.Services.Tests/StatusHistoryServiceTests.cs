@@ -88,19 +88,29 @@ namespace Piba.Services.Tests
                 .ReturnsAsync(false);
 
             var fakeExcelFile = new byte[] { 1, 2, 3, 4, 5 };
+            var attachmentReportFakeFile = new byte[] { 1, 2, 3, 4, 5, 6 };
 
             _excelServiceMock.Setup(s => s.GenerateStatusHistoryAsync())
                 .ReturnsAsync(fakeExcelFile);
 
-            await _memberStatusHistoryService.SendStatusHistoryEmailToReceiversAsync();
+            var baseDate = DateTime.Today;
+
+            _excelServiceMock.Setup(s => s.GenerateAttendanceReportAsync(baseDate))
+                .ReturnsAsync(attachmentReportFakeFile);
+
+            await _memberStatusHistoryService.SendStatusHistoryEmailToReceiversAsync(baseDate);
 
             _statusHistoryRepositoryMock.Verify(r =>
                 r.HistoryForLastMonthExistsAsync(),
                     Times.Once);
 
+
+            var name = $"Atividade de Membros {DateTime.Now.AddMonths(-1):MM/yyyy}.xlsx";
             _emailServiceMock.Verify(r =>
                 r.SendEmailToDeveloper(It.Is<SendEmailDto>(e => 
-                    e.Subject == $"Atividade de Membros {DateTime.Now.AddMonths(-1):MM/yyyy}.xlsx"), fakeExcelFile),
+                    e.Subject == name), 
+                    It.Is<AttachmentDto>(a => a.Name == name && a.Bytes == fakeExcelFile),
+                    It.Is<AttachmentDto>(a => a.Name == "Atividade por dia no mês anterior" && a.Bytes == attachmentReportFakeFile)),
                 Times.Once);
 
             _statusHistoryRepositoryMock.Verify(r =>
@@ -117,10 +127,10 @@ namespace Piba.Services.Tests
             _statusHistoryRepositoryMock.Setup(r => r.IsHistoryOfLastMonthSentAsync())
                 .ReturnsAsync(true);
 
-            await _memberStatusHistoryService.SendStatusHistoryEmailToReceiversAsync();
+            await _memberStatusHistoryService.SendStatusHistoryEmailToReceiversAsync(DateTime.Today);
 
             _emailServiceMock.Verify(s => 
-                s.SendEmailToDeveloper(It.IsAny<SendEmailDto>(), It.IsAny<byte[]>()), 
+                s.SendEmailToDeveloper(It.IsAny<SendEmailDto>(), It.IsAny<AttachmentDto>()), 
                 Times.Never);
         }
     }
