@@ -6,7 +6,7 @@ namespace Piba.Repositories.Interfaces
     public interface SchoolAttendanceRepository
     {
         Task CreateAsync(SchoolAttendance schoolAttendance);
-        Task<Dictionary<DateOnly, List<AttendanceReportDto>>> GetAttendancesReportAsync(List<DateOnly> list, TimeSpan maxTime);
+        Task<Dictionary<DateOnly, List<AttendanceReportDto>>> GetAttendancesReportAsync(List<DateOnly> list, TimeSpan maxTime, int timezone);
         Task<int> GetByDatesAsync(MemberAttendancesByDatesFilter filter);
         Task<List<SchoolAttendance>> GetLastMonthExcusesAsync();
     }

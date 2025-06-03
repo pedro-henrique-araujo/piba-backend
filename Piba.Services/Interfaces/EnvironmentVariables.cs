@@ -9,5 +9,6 @@ namespace Piba.Services.Interfaces
         string FromEmail { get; }
         TimeSpan MinValidTime { get; }
         TimeSpan MaxValidTime { get; }
+        int TimezoneOffset { get; }
     }
 }

@@ -6,7 +6,6 @@ namespace Piba.Repositories.Interfaces
     public interface StatusHistoryItemRepository
     {
         Task CreateAsync(IEnumerable<StatusHistoryItem> items);
-        Task<List<AttendanceReportDto>> GetAttendancesReportAsync(DateOnly date);
         Task<List<StatusHistoryReportDto>> GetLastHistoryAsync(ValidTimeFilter filter);
     }
 }

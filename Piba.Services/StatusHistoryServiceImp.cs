@@ -61,7 +61,7 @@ namespace Piba.Services
             var excelAttendanceReportFile = await _excelService.GenerateAttendanceReportAsync(date);
             _emailService.SendEmailToDeveloper(new() { Subject = fileName, FileName = fileName }, 
                 new AttachmentDto(fileName, excelFile),
-                new AttachmentDto("Atividade por dia no mês anterior", excelAttendanceReportFile));
+                new AttachmentDto($"Frequência por dia no mês anterior {DateTime.Now.AddMonths(-1):MM/yyyy}.xlsx", excelAttendanceReportFile));
             await _statusHistoryRepository.MarkLastMonthHistoryAsSentAsync();
         }
     }

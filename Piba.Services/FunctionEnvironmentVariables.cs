@@ -13,6 +13,8 @@ namespace Piba.Services
 
         public TimeSpan MaxValidTime { get; }
 
+        public int TimezoneOffset { get; }
+
         public FunctionEnvironmentVariables()
         {
             DeveloperEmail = GetVariableValue("DeveloperEmail");
@@ -21,6 +23,7 @@ namespace Piba.Services
             FromPassword = GetVariableValue("FromEmailPassword");
             MinValidTime = TimeSpan.Parse(GetVariableValue("MinValidTime"));
             MaxValidTime = TimeSpan.Parse(GetVariableValue("MaxValidTime"));
+            TimezoneOffset = int.Parse(GetVariableValue("TimezoneOffset"));
         }
 
         private string GetVariableValue(string key)

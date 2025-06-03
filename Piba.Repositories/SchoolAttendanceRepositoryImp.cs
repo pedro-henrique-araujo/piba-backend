@@ -22,7 +22,7 @@ namespace Piba.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Dictionary<DateOnly, List<AttendanceReportDto>>> GetAttendancesReportAsync(List<DateOnly> list, TimeSpan maxTime)
+        public async Task<Dictionary<DateOnly, List<AttendanceReportDto>>> GetAttendancesReportAsync(List<DateOnly> list, TimeSpan maxTime, int timezone)
         {
             var result = await _dbContext.Set<SchoolAttendance>()
                 .Include(s => s.Member)
@@ -36,7 +36,7 @@ namespace Piba.Repositories
                 .Select(r => new AttendanceReportDto
                 {
                     Name = r.Member.Name,
-                    Time = TimeOnly.FromTimeSpan(r.CreatedDate.Value.TimeOfDay),
+                    Time = TimeOnly.FromTimeSpan(r.CreatedDate.Value.AddHours(timezone).TimeOfDay),
                 })
                 .ToList());
             

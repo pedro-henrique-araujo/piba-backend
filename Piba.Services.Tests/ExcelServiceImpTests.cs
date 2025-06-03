@@ -1,5 +1,4 @@
-﻿using Google.Apis.Auth.OAuth2.Requests;
-using Moq;
+﻿using Moq;
 using OfficeOpenXml;
 using Piba.Data.Dto;
 using Piba.Data.Entities;
@@ -55,6 +54,7 @@ namespace Piba.Services.Tests
             var timespan = new TimeSpan(1);
 
             _environmentVariablesMock.Setup(c => c.MaxValidTime).Returns(timespan);
+            _environmentVariablesMock.Setup(c => c.TimezoneOffset).Returns(-1);
 
             _schoolAttendanceRepositoryMock
                 .Setup(r => r.GetAttendancesReportAsync(It.Is<List<DateOnly>>(
@@ -65,7 +65,7 @@ namespace Piba.Services.Tests
                     l[1].Day == 14 &&
                     l[2].Day == 21 &&
                     l[3].Day == 28
-                 ), timespan))
+                 ), timespan, -1))
                 .ReturnsAsync(report);
 
 
@@ -78,7 +78,7 @@ namespace Piba.Services.Tests
             AssertFourSaturdaysAttendancesReport(package);
         }
 
-        
+
 
         [Fact]
         public async Task GenerateAttendanceReportAsync_WhenFiveSaturdays_GenerateCorrectly()
@@ -86,6 +86,7 @@ namespace Piba.Services.Tests
             var report = GetFiveSaturdaysAttendanceReportDicionary();
             var timespan = new TimeSpan(1);
             _environmentVariablesMock.Setup(c => c.MaxValidTime).Returns(timespan);
+            _environmentVariablesMock.Setup(c => c.TimezoneOffset).Returns(-1);
 
             _schoolAttendanceRepositoryMock
             .Setup(r => r.GetAttendancesReportAsync(It.Is<List<DateOnly>>(
@@ -97,7 +98,7 @@ namespace Piba.Services.Tests
                 l[2].Day == 17 &&
                 l[3].Day == 24 &&
                 l[4].Day == 31
-             ), timespan))
+             ), timespan, -1))
             .ReturnsAsync(report);
 
             var today = new DateTime(2025, 6, 3);

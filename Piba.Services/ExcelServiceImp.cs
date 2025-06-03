@@ -31,7 +31,10 @@ namespace Piba.Services
 
             var excelWrapper = new ExcelWrapper();
 
-            foreach (var pair in await _schoolAttendanceRepository.GetAttendancesReportAsync(saturdays, _environmentVariables.MaxValidTime))
+            foreach (var pair in await _schoolAttendanceRepository.GetAttendancesReportAsync(
+                saturdays, 
+                _environmentVariables.MaxValidTime,
+                _environmentVariables.TimezoneOffset))
             {
                 excelWrapper.AddWorksheet<AttendanceReportDto>(
                    new(pair.Key.Day.ToString())

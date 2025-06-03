@@ -108,32 +108,33 @@ namespace Piba.Repositories.Tests
         [InlineData(MemberStatus.AlwaysExcused, true, 61)]
         public async Task GetAttendancesReportAsync_WhenCalled_ShouldReturnAttendancesReport(MemberStatus status, bool isPresent, int minutes)
         {
+            var date = _baseDate.AddHours(1);
             var member = new Member()
             {
                 Name = "A",
                 Status = MemberStatus.Active,
-                LastStatusUpdate = _baseDate
+                LastStatusUpdate = date
             };
 
             var member2 = new Member()
             {
                 Name = "B",
                 Status = status,
-                LastStatusUpdate = _baseDate
+                LastStatusUpdate = date
             };
 
             var member3 = new Member()
             {
                 Name = "C",
                 Status = MemberStatus.Removed,
-                LastStatusUpdate = _baseDate
+                LastStatusUpdate = date
             };
 
             var member4 = new Member()
             {
                 Name = "D",
                 Status = MemberStatus.Active,
-                LastStatusUpdate = _baseDate
+                LastStatusUpdate = date
             };
 
             var schoolAttendances = new List<SchoolAttendance>
@@ -141,31 +142,31 @@ namespace Piba.Repositories.Tests
                 new()
                 {
                     Member = member,
-                    CreatedDate = _baseDate.AddDays(-1),
+                    CreatedDate = date.AddDays(-1),
                     IsPresent = true
                 },
                 new()
                 {
                     Member = member2,
-                    CreatedDate = _baseDate.AddHours(1),
+                    CreatedDate = date.AddHours(1),
                     IsPresent = true
                 },
                 new()
                 {
                     Member = member3,
-                    CreatedDate = _baseDate,
+                    CreatedDate = date,
                     IsPresent = true
                 },
                 new()
                 {
                     Member = member4,
-                    CreatedDate = _baseDate.AddMinutes(minutes),
+                    CreatedDate = date.AddMinutes(minutes),
                     IsPresent = isPresent
                 },
                 new()
                 {
                     Member = member4,
-                    CreatedDate = _baseDate.AddDays(1),
+                    CreatedDate = date.AddDays(1),
                     IsPresent = true
                 },
             };
@@ -176,11 +177,11 @@ namespace Piba.Repositories.Tests
 
             var dates = new List<DateOnly> 
             {
-                DateOnly.FromDateTime(_baseDate.AddDays(-1)),
-                DateOnly.FromDateTime(_baseDate)
+                DateOnly.FromDateTime(date.AddDays(-1)),
+                DateOnly.FromDateTime(date)
             };
 
-            var result = await _statusAttendanceRepository.GetAttendancesReportAsync(dates, _baseDate.AddMinutes(60).TimeOfDay);
+            var result = await _statusAttendanceRepository.GetAttendancesReportAsync(dates, date.AddMinutes(60).TimeOfDay, -1);
 
             Assert.Equal(2, result.Count);
 

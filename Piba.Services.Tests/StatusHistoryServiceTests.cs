@@ -110,7 +110,7 @@ namespace Piba.Services.Tests
                 r.SendEmailToDeveloper(It.Is<SendEmailDto>(e => 
                     e.Subject == name), 
                     It.Is<AttachmentDto>(a => a.Name == name && a.Bytes == fakeExcelFile),
-                    It.Is<AttachmentDto>(a => a.Name == "Atividade por dia no mês anterior" && a.Bytes == attachmentReportFakeFile)),
+                    It.Is<AttachmentDto>(a => a.Name == $"Frequência por dia no mês anterior {DateTime.Now.AddMonths(-1):MM/yyyy}.xlsx" && a.Bytes == attachmentReportFakeFile)),
                 Times.Once);
 
             _statusHistoryRepositoryMock.Verify(r =>
