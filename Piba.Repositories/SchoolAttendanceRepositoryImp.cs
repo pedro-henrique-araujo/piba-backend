@@ -2,6 +2,7 @@
 using Piba.Data;
 using Piba.Data.Dto;
 using Piba.Data.Entities;
+using Piba.Data.Enums;
 using Piba.Repositories.Interfaces;
 
 namespace Piba.Repositories
@@ -19,6 +20,26 @@ namespace Piba.Repositories
         {
             _dbContext.Entry(schoolAttendance).State = EntityState.Added;
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<Dictionary<DateOnly, List<AttendanceReportDto>>> GetAttendancesReportAsync(List<DateOnly> list, TimeSpan maxTime, int timezone)
+        {
+            var result = await _dbContext.Set<SchoolAttendance>()
+                .Include(s => s.Member)
+                .Where(s => s.Member.Status != MemberStatus.Removed
+                    && s.IsPresent 
+                    && s.CreatedDate.Value.TimeOfDay <= maxTime
+                ).ToListAsync();
+
+            return list.ToDictionary(l => l,
+                l => result.Where(r => l == DateOnly.FromDateTime(r.CreatedDate.Value))
+                .Select(r => new AttendanceReportDto
+                {
+                    Name = r.Member.Name,
+                    Time = TimeOnly.FromTimeSpan(r.CreatedDate.Value.AddHours(timezone).TimeOfDay),
+                })
+                .ToList());
+            
         }
 
         public async Task<int> GetByDatesAsync(MemberAttendancesByDatesFilter filter)

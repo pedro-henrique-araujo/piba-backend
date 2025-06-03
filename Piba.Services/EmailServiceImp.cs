@@ -18,7 +18,7 @@ namespace Piba.Services
         public void SendEmailToDeveloper(SendEmailDto dto)
         {
 
-            var email = new MailMessage(_environmentVariables.FromEmail, _environmentVariables.DeveloperEmail)
+            using var email = new MailMessage(_environmentVariables.FromEmail, _environmentVariables.DeveloperEmail)
             {
                 Subject = dto.Subject,
                 Body = dto.Body,
@@ -27,19 +27,23 @@ namespace Piba.Services
             _smtpClientWrapper.Send(email);
         }
 
-        public void SendEmailToDeveloper(SendEmailDto dto, byte[] attachment)
+        public void SendEmailToDeveloper(SendEmailDto dto, params AttachmentDto[] attachments)
         {
-            var email = new MailMessage(_environmentVariables.FromEmail, _environmentVariables.DeveloperEmail)
+            using var email = new MailMessage(_environmentVariables.FromEmail, _environmentVariables.DeveloperEmail)
             {
                 Subject = dto.Subject,
                 Body = dto.Body
             };
 
-            using var memoryStream = new MemoryStream(attachment);
+            foreach (var attachment in attachments)
+            {
+                var memoryStream = new MemoryStream(attachment.Bytes);
 
-            email.Attachments.Add(new (memoryStream, dto.FileName));
+                email.Attachments.Add(new(memoryStream, attachment.Name));
+            }
 
             _smtpClientWrapper.Send(email);
+
         }
     }
 }

@@ -52,13 +52,16 @@ namespace Piba.Services
             await _statusHistoryItemRepository.CreateAsync(histories);
         }
 
-        public async Task SendStatusHistoryEmailToReceiversAsync()
+        public async Task SendStatusHistoryEmailToReceiversAsync(DateTime date)
         {
             await CreateForLastMonthIfItDoesNotExistAsync();
             if (await _statusHistoryRepository.IsHistoryOfLastMonthSentAsync()) return;
             var excelFile = await _excelService.GenerateStatusHistoryAsync();
             var fileName = $"Atividade de Membros {DateTime.Now.AddMonths(-1):MM/yyyy}.xlsx";
-            _emailService.SendEmailToDeveloper(new() { Subject = fileName, FileName = fileName }, excelFile);
+            var excelAttendanceReportFile = await _excelService.GenerateAttendanceReportAsync(date);
+            _emailService.SendEmailToDeveloper(new() { Subject = fileName, FileName = fileName }, 
+                new AttachmentDto(fileName, excelFile),
+                new AttachmentDto($"Frequência por dia no mês anterior {DateTime.Now.AddMonths(-1):MM/yyyy}.xlsx", excelAttendanceReportFile));
             await _statusHistoryRepository.MarkLastMonthHistoryAsSentAsync();
         }
     }

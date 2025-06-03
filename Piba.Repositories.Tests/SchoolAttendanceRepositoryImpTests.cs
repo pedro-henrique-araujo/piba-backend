@@ -101,6 +101,104 @@ namespace Piba.Repositories.Tests
             Assert.DoesNotContain(result, a => a.Member is null);
         }
 
+        [Theory]
+        [InlineData(MemberStatus.Active, false, 0)]
+        [InlineData(MemberStatus.Inactive, false, 0)]
+        [InlineData(MemberStatus.AlwaysExcused, false, 0)]
+        [InlineData(MemberStatus.AlwaysExcused, true, 61)]
+        public async Task GetAttendancesReportAsync_WhenCalled_ShouldReturnAttendancesReport(MemberStatus status, bool isPresent, int minutes)
+        {
+            var date = _baseDate.AddHours(1);
+            var member = new Member()
+            {
+                Name = "A",
+                Status = MemberStatus.Active,
+                LastStatusUpdate = date
+            };
+
+            var member2 = new Member()
+            {
+                Name = "B",
+                Status = status,
+                LastStatusUpdate = date
+            };
+
+            var member3 = new Member()
+            {
+                Name = "C",
+                Status = MemberStatus.Removed,
+                LastStatusUpdate = date
+            };
+
+            var member4 = new Member()
+            {
+                Name = "D",
+                Status = MemberStatus.Active,
+                LastStatusUpdate = date
+            };
+
+            var schoolAttendances = new List<SchoolAttendance>
+            {
+                new()
+                {
+                    Member = member,
+                    CreatedDate = date.AddDays(-1),
+                    IsPresent = true
+                },
+                new()
+                {
+                    Member = member2,
+                    CreatedDate = date.AddHours(1),
+                    IsPresent = true
+                },
+                new()
+                {
+                    Member = member3,
+                    CreatedDate = date,
+                    IsPresent = true
+                },
+                new()
+                {
+                    Member = member4,
+                    CreatedDate = date.AddMinutes(minutes),
+                    IsPresent = isPresent
+                },
+                new()
+                {
+                    Member = member4,
+                    CreatedDate = date.AddDays(1),
+                    IsPresent = true
+                },
+            };
+
+            await _pibaDbContext.Set<SchoolAttendance>().AddRangeAsync(schoolAttendances);
+            await _pibaDbContext.SaveChangesAsync();
+            _pibaDbContext.ChangeTracker.Clear();
+
+            var dates = new List<DateOnly> 
+            {
+                DateOnly.FromDateTime(date.AddDays(-1)),
+                DateOnly.FromDateTime(date)
+            };
+
+            var result = await _statusAttendanceRepository.GetAttendancesReportAsync(dates, date.AddMinutes(60).TimeOfDay, -1);
+
+            Assert.Equal(2, result.Count);
+
+            Assert.Contains(result, r => r.Key == DateOnly.FromDateTime(_baseDate.AddDays(-1))
+                && r.Value.Count == 1
+                && r.Value[0].Name == "A"
+                && r.Value[0].Time == TimeOnly.FromDateTime(_baseDate.AddDays(-1)));
+
+            Assert.Contains(result, r => r.Key == DateOnly.FromDateTime(_baseDate.AddHours(1))
+                && r.Value.Count == 1
+                && r.Value[0].Name == "B"
+                && r.Value[0].Time == TimeOnly.FromDateTime(_baseDate.AddHours(1)));
+
+            Assert.DoesNotContain(result, r => r.Value.Any(v => v.Name == "C"));
+            Assert.DoesNotContain(result, r => r.Value.Any(v => v.Name == "D"));
+        }
+
         private async Task<MemberAttendancesByDatesFilter> SetupDatabaseToTestGetByDatesAsync()
         {
             var members = new List<Member>

@@ -20,7 +20,7 @@ namespace Piba.Function
             [TimerTrigger("0 0 0 * * *", RunOnStartup = true)] TimerInfo timerInfo)
         {
             _semaphore.WaitOne();
-            await _statusHistoryService.SendStatusHistoryEmailToReceiversAsync();
+            await _statusHistoryService.SendStatusHistoryEmailToReceiversAsync(DateTime.Today);
             _semaphore.Release();
         }
     }

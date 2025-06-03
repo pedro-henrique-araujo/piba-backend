@@ -25,6 +25,34 @@ namespace Piba.Services
             _schoolAttendanceRepository = schoolAttendanceRepository;
         }
 
+        public async Task<byte[]> GenerateAttendanceReportAsync(DateTime dateTime)
+        {
+            var saturdays = GetLastMonthsSaturdays(dateTime);
+
+            var excelWrapper = new ExcelWrapper();
+
+            foreach (var pair in await _schoolAttendanceRepository.GetAttendancesReportAsync(
+                saturdays, 
+                _environmentVariables.MaxValidTime,
+                _environmentVariables.TimezoneOffset))
+            {
+                excelWrapper.AddWorksheet<AttendanceReportDto>(
+                   new(pair.Key.Day.ToString())
+                   {
+                       Map = new()
+                       {
+                           ["Nome"] = r => r.Name,
+                           ["Horário"] = r => r.Time.ToString("HH:mm"),
+                       },
+                       Rows = pair.Value.OrderBy(r => r.Name).ToList()
+                   });
+            }
+
+            return await excelWrapper.GetByteArrayAsync();
+        }
+
+       
+
         public async Task<byte[]> GenerateStatusHistoryAsync()
         {
             var excelWrapper = new ExcelWrapper();
@@ -99,6 +127,22 @@ namespace Piba.Services
 
                 Rows = lastMonthExcuses.OrderBy(a => a.Member.Name).ToList()
             });
+        }
+
+        private static List<DateOnly> GetLastMonthsSaturdays(DateTime dateTime)
+        {
+            var firstDayOfTheCurrentMonth = new DateOnly(dateTime.Year, dateTime.Month, 1);
+            var lastMonthsFirstDay = firstDayOfTheCurrentMonth.AddMonths(-1);
+            var saturday = lastMonthsFirstDay.AddDays(6 - (int)lastMonthsFirstDay.DayOfWeek);
+            var saturdays = new List<DateOnly>();
+
+            while (saturday < firstDayOfTheCurrentMonth)
+            {
+                saturdays.Add(saturday);
+                saturday = saturday.AddDays(7);
+            }
+
+            return saturdays;
         }
     }
 }

@@ -14,6 +14,8 @@ namespace Piba.Services
 
         public TimeSpan MaxValidTime { get; }
 
+        public int TimezoneOffset { get; }
+
         public WebApiEnvironmentVariables(IConfiguration configuration)
         {
             DeveloperEmail = configuration["DeveloperEmail"];
@@ -22,6 +24,7 @@ namespace Piba.Services
             FromPassword = configuration["FromEmailPassword"];
             MinValidTime = TimeSpan.Parse(configuration["MinValidTime"]);
             MaxValidTime = TimeSpan.Parse(configuration["MaxValidTime"]);
+            TimezoneOffset = int.Parse(configuration["TimezoneOffset"]);
         }
     }
 }
