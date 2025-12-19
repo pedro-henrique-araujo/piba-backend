@@ -18,6 +18,7 @@ namespace Piba.Services
         public async Task CreateLinksAsync(Guid songId, List<LinkDto> links)
         {
             var linksToSave = links.Adapt<List<Link>>();
+            if (linksToSave is null) return;
             foreach (var item in linksToSave)
             {
                 item.SongId = songId;

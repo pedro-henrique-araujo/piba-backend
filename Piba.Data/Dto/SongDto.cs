@@ -5,6 +5,6 @@
         public Guid? Id { get; set; }
         public string Name { get; set; }
 
-        public List<LinkDto> Links { get; set; }
+        public List<LinkDto>? Links { get; set; }
     }
 }

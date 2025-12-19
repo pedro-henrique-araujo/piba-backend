@@ -24,7 +24,7 @@ namespace Piba.Services
             FromPassword = configuration["FromEmailPassword"];
             MinValidTime = TimeSpan.Parse(configuration["MinValidTime"]);
             MaxValidTime = TimeSpan.Parse(configuration["MaxValidTime"]);
-            TimezoneOffset = int.Parse(configuration["TimezoneOffset"]);
+            TimezoneOffset = configuration.GetValue<int?>("TimezoneOffset") ?? 0;
         }
     }
 }
