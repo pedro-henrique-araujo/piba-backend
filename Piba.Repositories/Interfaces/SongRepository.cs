@@ -9,7 +9,7 @@ namespace Piba.Repositories.Interfaces
         Task DeleteAsync(Guid id);
         Task<Song> GetByIdAsync(Guid id);
         Task<int> GetTotalAsync();
-        Task<List<Song>> PaginateAsync(PaginationQueryParameters paginationQueryParameters);
+        Task<List<Song>> PaginateAsync(BrowseQueryParameters browseQueryParameters);
         Task UpdateAsync(Song song);
     }
 }

@@ -20,6 +20,9 @@ namespace Piba.Data
         public DbSet<StatusHistoryItem> StatusHistoryItems { get; set; }
         public DbSet<Song> Songs { get; set; }
         public DbSet<Link> Links { get; set; }
+
+        public DbSet<Schedule> Schedules { get; set; }
+        public DbSet<ScheduleSong> ScheduleSongs { get; set; }
         public DbSet<Log> Logs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

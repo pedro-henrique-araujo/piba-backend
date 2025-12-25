@@ -8,7 +8,7 @@ namespace Piba.Services.Interfaces
         Task CreateAsync(SongDto song);
         Task DeleteAsync(Guid id);
         Task<SongDto> GetByIdAsync(Guid id);
-        Task<RecordsPage<Song>> PaginateAsync(PaginationQueryParameters paginationQueryParameters);
+        Task<RecordsPage<Song>> PaginateAsync(BrowseQueryParameters browseQueryParameters);
         Task UpdateAsync(SongDto songDto);
     }
 }

@@ -3,6 +3,8 @@ using Piba.Data.Entities;
 using Piba.Repositories.Interfaces;
 using Piba.Services.Interfaces;
 using Mapster;
+using Piba.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Piba.Services
 {
@@ -10,18 +12,30 @@ namespace Piba.Services
     {
         private readonly SongRepository _songRepository;
         private readonly LinkService _linkService;
+        PibaDbContext _db;
 
-        public SongServiceImp(SongRepository songRepository, LinkService linkService)
+        public SongServiceImp(SongRepository songRepository, LinkService linkService, PibaDbContext db)
         {
             _songRepository = songRepository;
             _linkService = linkService;
+            _db = db;
         }
 
-        public async Task<RecordsPage<Song>> PaginateAsync(PaginationQueryParameters paginationQueryParameters)
+        public async Task<RecordsPage<Song>> PaginateAsync(BrowseQueryParameters browseQueryParameters)
         {
             var page = new RecordsPage<Song>();
-            page.Records = await _songRepository.PaginateAsync(paginationQueryParameters);
-            page.Total = await _songRepository.GetTotalAsync();
+
+            var query = _db.Songs.AsQueryable();
+
+            if (browseQueryParameters.Search is not null)
+            {
+                query = query.Where(s => EF.Functions.Like(s.Name, $"%{browseQueryParameters.Search}%"));
+            }
+
+            page.Total = await query.CountAsync();
+
+            query = query.Skip(browseQueryParameters.Skip).Take(browseQueryParameters.Take);
+            page.Records = await query.ToListAsync();
             return page;
         }
 

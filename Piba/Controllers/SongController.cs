@@ -20,9 +20,9 @@ namespace Piba.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> PaginateAsync([FromQuery] PaginationQueryParameters paginationQueryParameters)
+        public async Task<IActionResult> PaginateAsync([FromQuery] BrowseQueryParameters browseQueryParameters)
         {
-            var output = await _songService.PaginateAsync(paginationQueryParameters);
+            var output = await _songService.PaginateAsync(browseQueryParameters);
             return Ok(output);
         }
 

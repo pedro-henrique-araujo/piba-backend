@@ -44,11 +44,16 @@ namespace Piba.Repositories
             return total;
         }
 
-        public async Task<List<Song>> PaginateAsync(PaginationQueryParameters paginationQueryParameters)
+        public async Task<List<Song>> PaginateAsync(BrowseQueryParameters browseQueryParameters)
         {
-            var records = await _dbContext.Set<Song>()
-                    .Skip(paginationQueryParameters.Skip)
-                    .Take(paginationQueryParameters.Take)                    
+            var query = _dbContext.Set<Song>();
+            if (browseQueryParameters.Search is not null)
+            {
+
+            }
+
+            var records = await query.Skip(browseQueryParameters.Skip)
+                    .Take(browseQueryParameters.Take)                    
                 .ToListAsync();
 
             return records;
